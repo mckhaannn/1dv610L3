@@ -5,6 +5,7 @@ require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('controller/MainController.php');
+require_once('controller/LoginController.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -16,9 +17,10 @@ $v = new \view\LoginView();
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
 
-$mc = new \controller\MainController($lv, $v);
+$lc = new \controller\LoginController($v);
+$mc = new \controller\MainController($lc, $lv, $v);
 
-$mc->render();
+$mc->redirect();
 
 
 $lv->render(false, $v, $dtv);

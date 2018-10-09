@@ -11,6 +11,7 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	private static $register = 'LoginView::Register';
 
 	
 
@@ -70,9 +71,39 @@ class LoginView {
 		';
 	}
 	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
+	/**
+	 * return the post in name
+	 * 
+	 * @return string
+	 */
+	public function getRequestUserName() {
+		return $_POST[self::$name];
 	}
-	
+
+	/**
+	 * return the post of password
+	 * 
+	 * @return string
+	 */
+	public function getRequestPassword() {
+		return $_POST[self::$password];
+	}
+
+	/**
+	 * return true if click on register
+	 * 
+	 * @return bool
+	 */
+	public function checkForRegisterGet() : bool {
+		return isset($_GET[self::$register]);
+	}
+
+	/**
+	 * return true if post on login
+	 * 
+	 * @return bool
+	 */
+	public function checkForLoginPost() : bool {
+		return isset($_POST[self::$login]);
+	}
 }

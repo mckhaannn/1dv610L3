@@ -4,15 +4,21 @@ namespace controller;
 
 class MainController{ 
   
-  private $loginView;
+  private $loginController;
   private $layoutView;
-  public function __construct(\view\layoutView $lv, \view\LoginView $v)
+  private $loginView;
+
+  public function __construct(LoginController $lc, \view\layoutView $lv, \view\LoginView $v)
   {
-    $this->loginView = $v;
+    $this->loginController = $lc;
     $this->layoutView = $lv;
+    $this->loginView = $v;
   }
 
-  public function render() {
+  public function redirect() {
 
+    if($this->loginView->checkForLoginPost()) {
+      echo 'hi';
+    }
   }
 }
