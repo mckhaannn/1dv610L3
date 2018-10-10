@@ -13,8 +13,7 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private static $register = 'LoginView::Register';
 
-
-	private $message = '';
+	private $messages = '';
 	
 
 	/**
@@ -25,31 +24,36 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response($isLoggedIn) {
-		$message = '';
-		if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
+		if(!$isLoggedIn && $this->userWantsToLogut()){
+			$this->setMessage('Bye bye');
+			$response = $this->generateLoginFormHTML($this->messages);
+
+		} else if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
 			$this->setMessage('Welcome and you will be remembered');
-			$response = $this->generateLogoutButtonHTML($this->message);
+			$response = $this->generateLogoutButtonHTML($this->messages);
+
 		} else if ($this->checkIfCookiesExist()) {
 			$this->setMessage('Welcome back with cookies.');  
-			$response = $this->generateLogoutButtonHTML($this->message);
+			$response = $this->generateLogoutButtonHTML($this->messages);
+
 		} else if($isLoggedIn) {
 			$this->setMessage('Welcome!');
-			$response = $this->generateLogoutButtonHTML($this->message);
+			$response = $this->generateLogoutButtonHTML($this->messages);
+
 		}	else if(!$isLoggedIn && $this->isUsernameAndPasswordNotEmpty()) {
 			$this->setMessage('Wrong username or password');
-			$response = $this->generateLoginFormHTML($this->message);
-		}	else if(!$isLoggedIn && $this->userWantsToLogut()){
-			$this->setMessage('Bye bye');
-			$response = $this->generateLoginFormHTML($this->message);
+			$response = $this->generateLoginFormHTML($this->messages);
+
 		} else {
 			$this->setMessage('');
-			$response = $this->generateLoginFormHTML($this->message);
+			$response = $this->generateLoginFormHTML($this->messages);
+
 		}
 		return $response;
 	}
 
 	public function setMessage($message) {
-		$this->message .= $message;
+		$this->messages .= $message;
 	} 
 
 	/**

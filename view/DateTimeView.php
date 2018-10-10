@@ -2,13 +2,14 @@
 
 namespace view;
 
+require_once('model/time.php');
+
+
 class DateTimeView {
 
+	public function showTime() {
 
-	public function show() {
-
-		$timeString = 'TODO, Write servertime here...';
-
-		return '<p>' . $timeString . '</p>';
+		$currentTime = \model\getTime();
+		return '<p>' .  $currentTime . '</p>';
 	}
 }

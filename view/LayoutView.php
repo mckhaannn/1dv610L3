@@ -12,10 +12,13 @@ class LayoutView {
   private $loginView;
   private $registerView;
   private $isLoggedIn;
+  private $dateTimeView;
 
-  public function reciveViews($v, $rw) {
+
+  public function reciveViews($v, $rw, $dtv) {
     $this->loginView = $v;
     $this->registerView = $rw;
+    $this->dateTimeView = $dtv;
   }
 
   
@@ -35,6 +38,7 @@ class LayoutView {
           ' . $this->renderIsLoggedIn($this->isLoggedIn) . '
           <div class="container">
           ' . $this->setLayout() . '              
+          ' . $this->dateTimeView->showTime() . '              
           </div>
         </body>
       </html>';
