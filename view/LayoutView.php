@@ -19,6 +19,9 @@ class LayoutView {
   }
 
   
+  /**
+   * render the selected view
+   */
   public function render() {
     echo '
       <!DOCTYPE html>

@@ -27,7 +27,7 @@ class LoginView {
 	public function response($isLoggedIn) {
 		$message = '';
 		if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
-			$this->setMessage('Welcome you will be remembered');
+			$this->setMessage('Welcome and you will be remembered');
 			$response = $this->generateLogoutButtonHTML($this->message);
 		} else if ($this->checkIfCookiesExist()) {
 			$this->setMessage('Welcome back with cookies.');  
@@ -35,7 +35,7 @@ class LoginView {
 		} else if($isLoggedIn) {
 			$this->setMessage('Welcome!');
 			$response = $this->generateLogoutButtonHTML($this->message);
-		}	else if(!$isLoggedIn && $this->isUsernameValid() && $this->isPasswordValid()) {
+		}	else if(!$isLoggedIn && $this->isUsernameAndPasswordNotEmpty()) {
 			$this->setMessage('Wrong username or password');
 			$response = $this->generateLoginFormHTML($this->message);
 		}	else if(!$isLoggedIn && $this->userWantsToLogut()){
@@ -93,6 +93,10 @@ class LoginView {
 		';
 	}
 	
+
+	/**
+	 * check if username exits and are not empty if empty set message
+	 */
 	public function isUsernameValid() {
 		if(isset($_POST[self::$name]) && empty($_POST[self::$name])) {
 			$this->setMessage('Username is missing');
@@ -100,12 +104,23 @@ class LoginView {
 			return isset($_POST[self::$name]) && !empty($_POST[self::$name]);
 		}
 	}
+
+	/**
+	 * check if password exits and are not empty if empty set message
+	 */
 	public function isPasswordValid() {
 		if(isset($_POST[self::$password]) && empty($_POST[self::$password])) {
 			$this->setMessage('Password is missing');
 		} else {
 			return isset($_POST[self::$password]) && !empty($_POST[self::$password]);
 		}
+	}
+
+	/**
+	 * check if username and password are empty or not
+	 */
+	private function isUsernameAndPasswordNotEmpty() {
+		return !empty($_POST[self::$name]) && !empty($_POST[self::$password]);
 	}
 	
 	/**
@@ -185,6 +200,16 @@ class LoginView {
 	 */
 	public function getCookiePassword() {
 		return $_COOKIE[self::$cookiePassword];
+	}
+
+	/**
+	 * removes cookie from browser
+	 */
+	public function removeCookies() {
+		unset($_COOKIE[self::$cookieName]);
+		unset($_COOKIE[self::$cookiePassword]);
+    setcookie(self::$cookieName, null, -1, '/');
+    setcookie(self::$cookiePassword, null, -1, '/');
 	}
 
 }

@@ -9,10 +9,10 @@ class RegiterView {
   private const MIN_USERNAME_LENGTH = 3;
   
 	public function checkValidPasswordLenght() : bool {
-		return strlen($this->getRequestPassword()) > 6;
+		return strlen($this->getRequestPassword()) > MIN_PASSWORD_LENGTH;
 	}
 	public function checkValidUsernameLenght() : bool {
-		return strlen($this->getRequestUserName()) > 3;
+		return strlen($this->getRequestUserName()) > MIN_USERNAME_LENGTH;
 	}
 
 }

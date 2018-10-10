@@ -29,6 +29,7 @@ class LoginController {
   }
   
   public function routeToLogout() {
+    $this->loginView->removeCookies();
     $this->sessionModel->endSession();
   }
 }
