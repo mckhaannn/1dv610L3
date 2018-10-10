@@ -4,14 +4,18 @@ namespace model;
 
 class SessionModel {
 
-  private $sessionName = 'user';
+  private static $sessionName = 'user';
 
+  public function startSession() {
+    if(!isset($_SESSION[self::$sessionName])) {
+      \session_start();
+    }
+  } 
   /**
    * create session with user
    */
   public function setSession($user) {
-    session_start();
-    $_SESSION[$sessionName] = $user;
+    $_SESSION[self::$sessionName] = $user;
   }
 
   /**
@@ -21,4 +25,6 @@ class SessionModel {
     session_unset(); 
     session_destroy(); 
   }
+
+  // public function 
 }

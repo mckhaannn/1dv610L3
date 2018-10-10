@@ -6,6 +6,7 @@ class LayoutView {
 
   private static $login = 'login';
   private static $register = 'register';
+  private static $sessionName = 'user';
   private const EMPTY_STRING = '';
   
   private $loginView;
@@ -43,7 +44,7 @@ class LayoutView {
    */
   public function setLayout() {
     $html = self::EMPTY_STRING;
-    if(isset($_POST[self::$register])) {
+    if(isset($_GET[self::$register])) {
       $html = 'hi';
     } else {
       $html = $this->loginView->response($this->isLoggedIn);

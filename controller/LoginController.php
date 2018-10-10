@@ -18,16 +18,17 @@ class LoginController {
   }
 
   public function routeToLogin() {
-    $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword()));
+    if($this->loginView->isUsernameValid() && $this->loginView->isPasswordValid()) {
+      $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword()));
+      $this->sessionModel->setSession($this->loginView->getRequestUserName());
+    }
   }
   
-  public function routeToLoginAndSaveCookie() {
-    // $this->loginView->setCookies($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
-    $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword()));
-    
-    // $this->layoutView->setLoggedInStatus($this->loginView->checkIfCookiesExist());
-  }
   public function routeToLoginWithCookie() {
     $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getCookieName(), $this->loginView->getCookiePassword()));
+  }
+  
+  public function routeToLogout() {
+    $this->sessionModel->endSession();
   }
 }

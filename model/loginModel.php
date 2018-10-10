@@ -4,12 +4,11 @@ namespace model;
 
 class LoginModel {
 
-  private $loggedInstatus = false;
+  // private $loggedInstatus = false;
   
   public function login($name, $password) {
-    echo 'sdf';
     include('database.php');
-    echo $name, $password;
+    // echo $name, $password;
     $match = $connection->prepare("SELECT * FROM users WHERE name=:name LIMIT 1");
     $match->bindParam(':name', $name);
     $match->execute();

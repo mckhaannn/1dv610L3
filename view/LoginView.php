@@ -26,13 +26,23 @@ class LoginView {
 	 */
 	public function response($isLoggedIn) {
 		$message = '';
-		if($isLoggedIn) {
-			$this->setMessage('Welcome');
+		if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
+			$this->setMessage('Welcome you will be remembered');
 			$response = $this->generateLogoutButtonHTML($this->message);
 		} else if ($this->checkIfCookiesExist()) {
-			$this->setMessage('Welcome back with cookies.');
+			$this->setMessage('Welcome back with cookies.');  
 			$response = $this->generateLogoutButtonHTML($this->message);
+		} else if($isLoggedIn) {
+			$this->setMessage('Welcome!');
+			$response = $this->generateLogoutButtonHTML($this->message);
+		}	else if(!$isLoggedIn && $this->isUsernameValid() && $this->isPasswordValid()) {
+			$this->setMessage('Wrong username or password');
+			$response = $this->generateLoginFormHTML($this->message);
+		}	else if(!$isLoggedIn && $this->userWantsToLogut()){
+			$this->setMessage('Bye bye');
+			$response = $this->generateLoginFormHTML($this->message);
 		} else {
+			$this->setMessage('');
 			$response = $this->generateLoginFormHTML($this->message);
 		}
 		return $response;
@@ -83,21 +93,28 @@ class LoginView {
 		';
 	}
 	
+	public function isUsernameValid() {
+		if(isset($_POST[self::$name]) && empty($_POST[self::$name])) {
+			$this->setMessage('Username is missing');
+		} else {
+			return isset($_POST[self::$name]) && !empty($_POST[self::$name]);
+		}
+	}
+	public function isPasswordValid() {
+		if(isset($_POST[self::$password]) && empty($_POST[self::$password])) {
+			$this->setMessage('Password is missing');
+		} else {
+			return isset($_POST[self::$password]) && !empty($_POST[self::$password]);
+		}
+	}
+	
 	/**
 	 * return the post in name
 	 * 
 	 * @return string
 	 */
 	public function getRequestUserName() {
-		if(empty($_POST[self::$name])) {
-			$this->setMessage("Usernae is missing ");
-		} else {
-			return $_POST[self::$name];
-		}
-	}
-
-	public function checkIfCredentialsIsValid() {
-		
+		return $_POST[self::$name];
 	}
 
 	/**
@@ -106,11 +123,7 @@ class LoginView {
 	 * @return string
 	 */
 	public function getRequestPassword() {
-		if(empty($_POST[self::$password])) {
-			$this->setMessage('Password is missing');
-		} else {
 			return $_POST[self::$password];
-		}
 	}
 
 	/**
@@ -136,7 +149,7 @@ class LoginView {
 	}
 
 	/**
-	 * return true uf
+	 * return true 
 	 * 
 	 * @return bool
 	 */

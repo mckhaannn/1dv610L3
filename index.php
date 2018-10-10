@@ -25,8 +25,9 @@ $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
 
 $lc = new \controller\LoginController($v, $lm, $lv, $sm);
-$mc = new \controller\MainController($lc, $lv, $v, $rv);
+$mc = new \controller\MainController($lc, $lv, $v, $rv, $sm);
 
+$sm->startSession();
 $mc->redirect();
 
 
