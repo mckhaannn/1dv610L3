@@ -3,6 +3,28 @@
 namespace view;
 
 class LayoutView {
+
+  private static $login = 'login';
+  private static $register = 'register';
+  private const EMPTY_STRING = '';
+  
+  private $loginView;
+  private $registerView;
+
+  public function reciveViews($v, $rw) {
+    $this->loginView = $v;
+    $this->registerView = $rw;
+  }
+
+  public function setLayout() {
+    $html = EMPTY_STRING;
+    if(isset($_POST[self::$login])) {
+      $html = 'hi';
+    } else {
+      $html = $this->loginView->response();
+    }
+    return $html;
+  }
   
   
   public function render($isLoggedIn, LoginView $v, DateTimeView $dtv) {

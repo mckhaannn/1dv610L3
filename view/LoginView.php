@@ -94,7 +94,7 @@ class LoginView {
 	 * 
 	 * @return bool
 	 */
-	public function checkForRegisterGet() : bool {
+	public function userWantsToRegister() : bool {
 		return isset($_GET[self::$register]);
 	}
 
@@ -103,7 +103,17 @@ class LoginView {
 	 * 
 	 * @return bool
 	 */
-	public function checkForLoginPost() : bool {
+	public function userWantsToLogin() : bool {
 		return isset($_POST[self::$login]);
 	}
+
+	/**
+	 * return true uf
+	 * 
+	 * @return bool
+	 */
+	public function userWantsToKeepLoggedIn() : bool {
+		return isset($_POST[self::$keep]);
+	}
+	
 }
