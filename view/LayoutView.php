@@ -25,7 +25,7 @@ class LayoutView {
   /**
    * render the selected view
    */
-  public function render() {
+  public function render($session) {
     echo '
       <!DOCTYPE html>
       <html>
@@ -35,9 +35,9 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($this->isLoggedIn) . '
+          ' . $this->renderIsLoggedIn($this->isLoggedIn, $session) . '
           <div class="container">
-          ' . $this->setLayout() . '              
+          ' . $this->setLayout($session) . '              
           ' . $this->dateTimeView->showTime() . '              
           </div>
         </body>
@@ -49,12 +49,12 @@ class LayoutView {
    * 
    * @return string
    */
-  public function setLayout() {
+  public function setLayout($session) {
     $html = self::EMPTY_STRING;
     if(isset($_GET[self::$register])) {
       $html = 'hi';
     } else {
-      $html = $this->loginView->response($this->isLoggedIn);
+      $html = $this->loginView->response($this->isLoggedIn, $session);
     }
     return $html;
   }
@@ -70,8 +70,8 @@ class LayoutView {
   /**
    * render logged in status
    */
-  private function renderIsLoggedIn($isLoggedIn) {
-    if ($isLoggedIn) {
+  private function renderIsLoggedIn($isLoggedIn, $session) {
+    if ($isLoggedIn && $session) {
       return '<h2>Logged in</h2>';
     }
     else {

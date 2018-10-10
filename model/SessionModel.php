@@ -18,6 +18,10 @@ class SessionModel {
     $_SESSION[self::$sessionName] = $user;
   }
 
+  public function isSession() : bool {
+    return isset($_SESSION[self::$sessionName]);
+  }
+
   /**
    * destroy the session
    */

@@ -23,9 +23,9 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response($isLoggedIn) {
-		if(!$isLoggedIn && $this->userWantsToLogut()){
-			$this->setMessage('Bye bye');
+	public function response($isLoggedIn, $session) {
+		if($session && $this->userWantsToLogut()){
+			$this->setMessage('Bye bye!');
 			$response = $this->generateLoginFormHTML($this->messages);
 
 		} else if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
@@ -33,15 +33,15 @@ class LoginView {
 			$response = $this->generateLogoutButtonHTML($this->messages);
 
 		} else if ($this->checkIfCookiesExist()) {
-			$this->setMessage('Welcome back with cookies.');  
+			$this->setMessage('Welcome back with cookie');  
 			$response = $this->generateLogoutButtonHTML($this->messages);
 
-		} else if($isLoggedIn) {
-			$this->setMessage('Welcome!');
+		} else if($session && $isLoggedIn) {
+			$this->setMessage('Welcome');
 			$response = $this->generateLogoutButtonHTML($this->messages);
 
 		}	else if(!$isLoggedIn && $this->isUsernameAndPasswordNotEmpty()) {
-			$this->setMessage('Wrong username or password');
+			$this->setMessage('Wrong name or password');
 			$response = $this->generateLoginFormHTML($this->messages);
 
 		} else {

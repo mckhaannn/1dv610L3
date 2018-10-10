@@ -7,7 +7,7 @@ class LoginModel {
   // private $loggedInstatus = false;
   
   public function login($name, $password) {
-    include('database.php');
+    include('Database.php');
     // echo $name, $password;
     $match = $connection->prepare("SELECT * FROM users WHERE name=:name LIMIT 1");
     $match->bindParam(':name', $name);
