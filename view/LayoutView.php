@@ -10,6 +10,7 @@ class LayoutView {
   
   private $loginView;
   private $registerView;
+  private $isLoggedIn;
 
   public function reciveViews($v, $rw) {
     $this->loginView = $v;
@@ -17,17 +18,21 @@ class LayoutView {
   }
 
   public function setLayout() {
-    $html = EMPTY_STRING;
-    if(isset($_POST[self::$login])) {
+    $html = self::EMPTY_STRING;
+    if(isset($_POST[self::$register])) {
       $html = 'hi';
     } else {
-      $html = $this->loginView->response();
+      $html = $this->loginView->response($this->isLoggedIn);
     }
     return $html;
   }
+
+  public function setLoggedInStatus($loginStatus) {
+    $this->isLoggedIn = $loginStatus;
+  }
   
   
-  public function render($isLoggedIn, LoginView $v, DateTimeView $dtv) {
+  public function render() {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -36,12 +41,9 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
-          
+          ' . $this->renderIsLoggedIn($this->isLoggedIn) . '
           <div class="container">
-              ' . $v->response() . '
-              
-              ' . $dtv->show() . '
+              ' . $this->setLayout() . '              
           </div>
          </body>
       </html>

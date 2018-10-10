@@ -6,6 +6,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('controller/MainController.php');
 require_once('controller/LoginController.php');
+require_once('view/registerView.php');
 require_once('model/loginModel.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
@@ -17,14 +18,15 @@ ini_set('display_errors', 'On');
 $lm = new \model\LoginModel();
 
 $v = new \view\LoginView();
+$rv = new \view\RegiterView();
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
 
-$lc = new \controller\LoginController($v, $lm);
-$mc = new \controller\MainController($lc, $lv, $v);
+$lc = new \controller\LoginController($v, $lm, $lv);
+$mc = new \controller\MainController($lc, $lv, $v, $rv);
 
 $mc->redirect();
 
 
-$lv->render(false, $v, $dtv);
+// $lv->render(, $dtv);
 
