@@ -17,6 +17,30 @@ class LayoutView {
     $this->registerView = $rw;
   }
 
+  
+  public function render() {
+    echo '
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Login Example</title>
+        </head>
+        <body>
+          <h1>Assignment 2</h1>
+          ' . $this->renderIsLoggedIn($this->isLoggedIn) . '
+          <div class="container">
+          ' . $this->setLayout() . '              
+          </div>
+        </body>
+      </html>';
+  }
+
+  /**
+   * decides what view to be shown
+   * 
+   * @return string
+   */
   public function setLayout() {
     $html = self::EMPTY_STRING;
     if(isset($_POST[self::$register])) {
@@ -27,29 +51,17 @@ class LayoutView {
     return $html;
   }
 
+  /**
+   * set logged in status
+   */
   public function setLoggedInStatus($loginStatus) {
     $this->isLoggedIn = $loginStatus;
   }
   
   
-  public function render() {
-    echo '<!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Login Example</title>
-        </head>
-        <body>
-          <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($this->isLoggedIn) . '
-          <div class="container">
-              ' . $this->setLayout() . '              
-          </div>
-         </body>
-      </html>
-    ';
-  }
-  
+  /**
+   * render logged in status
+   */
   private function renderIsLoggedIn($isLoggedIn) {
     if ($isLoggedIn) {
       return '<h2>Logged in</h2>';

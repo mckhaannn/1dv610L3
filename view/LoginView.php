@@ -13,6 +13,7 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private static $register = 'LoginView::Register';
 
+
 	private $message = '';
 	
 
@@ -88,7 +89,15 @@ class LoginView {
 	 * @return string
 	 */
 	public function getRequestUserName() {
-		return $_POST[self::$name];
+		if(empty($_POST[self::$name])) {
+			$this->setMessage("Usernae is missing ");
+		} else {
+			return $_POST[self::$name];
+		}
+	}
+
+	public function checkIfCredentialsIsValid() {
+		
 	}
 
 	/**
@@ -97,7 +106,11 @@ class LoginView {
 	 * @return string
 	 */
 	public function getRequestPassword() {
-		return $_POST[self::$password];
+		if(empty($_POST[self::$password])) {
+			$this->setMessage('Password is missing');
+		} else {
+			return $_POST[self::$password];
+		}
 	}
 
 	/**
@@ -118,6 +131,10 @@ class LoginView {
 		return isset($_POST[self::$login]);
 	}
 
+	public function userWantsToLogut() : bool {
+		return isset($_POST[self::$logout]);
+	}
+
 	/**
 	 * return true uf
 	 * 
@@ -126,6 +143,7 @@ class LoginView {
 	public function userWantsToKeepLoggedIn() : bool {
 		return isset($_POST[self::$keep]);
 	}
+
 
 	/**
 	 * check if cookie exits
@@ -140,6 +158,20 @@ class LoginView {
 	public function setCookies() {
 		setcookie(self::$cookieName, $this->getRequestUserName(), time() + (86400), "/"); // 86400 = 1 day
 		setcookie(self::$cookiePassword, $this->getRequestPassword(), time() + (86400), "/"); // 86400 = 1 day
+	}
+
+	/**
+	 * return cookie username
+	 */
+	public function getCookieName() {
+		return $_COOKIE[self::$cookieName];
+	}
+
+	/**
+	 * return cookie password
+	 */
+	public function getCookiePassword() {
+		return $_COOKIE[self::$cookiePassword];
 	}
 
 }

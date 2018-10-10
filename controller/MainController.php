@@ -25,13 +25,16 @@ class MainController{
 
     $this->sendViewsToLayout();
 
+    if($this->loginView->checkIfCookiesExist()) {
+      $this->loginController->routeToLoginWithCookie();
+    }
+
     if($this->loginView->userWantsToLogin() && !$this->loginView->userWantsToKeepLoggedIn()) {
       $this->loginController->routeToLogin();
       echo 'user want to login';
     }
     if($this->loginView->userWantsToKeepLoggedIn() && $this->loginView->userWantsToLogin()) {
       $this->loginView->setCookies();
-      // $this->layoutView->setLoggedInStatus($this->loginView->checkIfCookiesExist());
       $this->loginController->routeToLoginAndSaveCookie();
       echo 'user wants to login and be kept logged in';
     }

@@ -15,15 +15,10 @@ class LoginModel {
     $match->execute();
     $results = $match->fetch();
     if($results && password_verify($password, $results['password'])) {
-      // $this->loggedInStatus = true;
-      echo 'yes';
       return true;
     } else {
-      echo 'no';
       return false;
     }
   }
-  // public function getStatus() {
-  //   return $this->loggedIn
-  // }
+
 }
