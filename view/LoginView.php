@@ -14,8 +14,12 @@ class LoginView {
 	private static $register = 'LoginView::Register';
 
 	private $messages = '';
+	private $loginModel;
 	
-
+	public function __construct(\model\LoginModel $lm)
+	{
+		$this->loginModel = $lm;
+	}
 	/**
 	 * Create HTTP response
 	 *
@@ -33,7 +37,7 @@ class LoginView {
 			$response = $this->generateLogoutButtonHTML($this->messages);
 
 		} else if ($this->checkIfCookiesExist()) {
-			$this->setMessage('Welcome back with cookie');  
+			$this->setMessage('Welcome back with cookies');  
 			$response = $this->generateLogoutButtonHTML($this->messages);
 
 		} else if($session && $isLoggedIn) {
@@ -52,6 +56,9 @@ class LoginView {
 		return $response;
 	}
 
+	/**
+	 * set messages
+	 */
 	public function setMessage($message) {
 		$this->messages .= $message;
 	} 
@@ -145,14 +152,6 @@ class LoginView {
 			return $_POST[self::$password];
 	}
 
-	/**
-	 * return true if click on register
-	 * 
-	 * @return bool
-	 */
-	public function userWantsToRegister() : bool {
-		return isset($_GET[self::$register]);
-	}
 
 	/**
 	 * return true if post on login

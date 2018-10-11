@@ -35,6 +35,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
+          ' . $this->generateRegisterUserLink() . '              
           ' . $this->renderIsLoggedIn($this->isLoggedIn, $session) . '
           <div class="container">
           ' . $this->setLayout($session) . '              
@@ -51,8 +52,8 @@ class LayoutView {
    */
   public function setLayout($session) {
     $html = self::EMPTY_STRING;
-    if(isset($_GET[self::$register])) {
-      $html = 'hi';
+    if($this->getRegister()) {
+      $html = $this->registerView->response();
     } else {
       $html = $this->loginView->response($this->isLoggedIn, $session);
     }
@@ -77,5 +78,15 @@ class LayoutView {
     else {
       return '<h2>Not logged in</h2>';
     }
+  }
+  private function generateRegisterUserLink() : string {
+		if($this->getRegister()){
+			return '<a href="?">Back to login</a>';
+		}
+		return '<a href="?' .self::$register . '">Register a new user</a>';
+  }
+  
+  private function getRegister() {
+    return isset($_GET[self::$register]);
   }
 }

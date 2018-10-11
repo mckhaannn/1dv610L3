@@ -9,6 +9,7 @@ require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('view/RegisterView.php');
+require_once('controller/RegisterController.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -19,13 +20,14 @@ ini_set('display_errors', 'On');
 $lm = new \model\LoginModel();
 $sm = new \model\SessionModel();
 
-$v = new \view\LoginView();
-$rv = new \view\RegiterView();
+$v = new \view\LoginView($lm);
+$rv = new \view\RegisterView();
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
 
+$rc = new \controller\RegisterController($rv);
 $lc = new \controller\LoginController($v, $lm, $lv, $sm);
-$mc = new \controller\MainController($lc, $lv, $v, $rv, $sm, $dtv);
+$mc = new \controller\MainController($lc, $rc, $lv, $v, $rv, $sm, $dtv);
 
 $sm->startSession();
 $mc->redirect();

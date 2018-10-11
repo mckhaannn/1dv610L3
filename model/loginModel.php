@@ -3,21 +3,19 @@
 namespace model;
 
 class LoginModel {
-
-  // private $loggedInstatus = false;
   
-  public function login($name, $password) {
+  public function login($user) {
     include('Database.php');
     // echo $name, $password;
-    $match = $connection->prepare("SELECT * FROM users WHERE name=:name LIMIT 1");
-    $match->bindParam(':name', $name);
+    var_dump($user);
+    $match = $connection->prepare("SELECT * FROM users WHERE name=:name");
+    $match->bindParam(':name', $user->getName());
     $match->execute();
     $results = $match->fetch();
-    if($results && password_verify($password, $results['password'])) {
+    if($results && password_verify($user->getPassword(), $results['password'])) {
       return true;
     } else {
       return false;
     }
   }
-
 }

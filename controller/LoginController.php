@@ -2,6 +2,8 @@
 
 namespace controller;
 
+require_once('model/User.php');
+
 class LoginController {
 
   private $loginView;
@@ -19,12 +21,14 @@ class LoginController {
 
   public function routeToLogin() {
     if($this->loginView->isUsernameValid() && $this->loginView->isPasswordValid()) {
-      $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword()));
+      $user = new \model\User($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
+      $this->layoutView->setLoggedInStatus($this->loginModel->login($user));
       $this->sessionModel->setSession($this->loginView->getRequestUserName());
     }
   }
   
   public function routeToLoginWithCookie() {
+    $this->loginModel->getUserCredentials($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
     $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getCookieName(), $this->loginView->getCookiePassword()));
   }
   
