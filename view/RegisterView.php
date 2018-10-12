@@ -4,31 +4,49 @@ namespace view;
 
 class RegisterView {
 
-  private const USERNAME_TO_SHORT_MESSAGE = 'Username has too few characters, at least 3 characters.';
-  private const PASSWORD_TO_SHORT_MESSAGE = 'Password has too few characters, at least 6 characters.';
-  private const USERNAME_CONTAINS_INVALID_CHARACTERS = 'Username contains invalid characters.';
-  private const PASSWORDS_NOT_EQUAL = 'Passwords do not match.';
-  private const EMPTY_STRING = '';
-
-  private const MIN_PASSWORD_LENGTH = 6;
-  private const MIN_USERNAME_LENGTH = 3;
-  
   private static $register = 'RegisterView::Register';
   private static $messageId = 'RegisterView::Message';
 	private static $name = 'RegisterView::UserName';
 	private static $password = 'RegisterView::Password';
   private static $passwordRepeate = 'RegisterView::PasswordRepeat';
-  private $messages = self::EMPTY_STRING;
 
+  private const USERNAME_TO_SHORT_MESSAGE = 'Username has too few characters, at least 3 characters.';
+  private const PASSWORD_TO_SHORT_MESSAGE = 'Password has too few characters, at least 6 characters.';
+  private const USERNAME_CONTAINS_INVALID_CHARACTERS = 'Username contains invalid characters.';
+  private const PASSWORDS_NOT_EQUAL = 'Passwords do not match.';
+  private const BREAK_ROW = '<br>';
+  private const EMPTY_STRING = '';
+
+  private const MIN_USERNAME_LENGTH = 2;
+  private const MIN_PASSWORD_LENGTH = 5;
+  
+  private $message = self::EMPTY_STRING;
+  
   public function response() {
-    $response = $this->generateRegisterForm($this->messages);
+    $message = $this->getMessages();
+    $response = $this->generateRegisterForm($message);
     return $response;
   }
-
+  
   public function getMessages() {
-    if() {
-      
+    $messages = self::EMPTY_STRING;
+    if($this->userWantsToRegister()) {
+      if(!$this->isPasswordEqual()) {
+        $messages .= self::PASSWORDS_NOT_EQUAL . self::BREAK_ROW;
+      }
+      if(!$this->usernameContainsValidCharacters()) {
+        $messages .= self::USERNAME_CONTAINS_INVALID_CHARACTERS . self::BREAK_ROW;
+      }
+      if(!$this->checkValidUsernameLenght()) {
+        $messages .= self::USERNAME_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      }
+      if(!$this->checkValidPasswordLenght()) {
+        $messages .= self::PASSWORD_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      } else {
+        $messages = self::EMPTY_STRING;
+      }
     }
+    return $messages;
   }
 
   public function generateRegisterForm($message) {
@@ -61,10 +79,14 @@ class RegisterView {
     }
     
     public function getRequestRegisterUsername() {
-      return $_POST[self::$name];
+      if(isset($_POST[self::$name])) {
+        return $_POST[self::$name];
+      }
     }
     public function getRequestRegisterPassword() {
-      return $_POST[self::$password];
+      if(isset($_POST[self::$password])) {
+        return $_POST[self::$password];
+      }
     }
     
     public function userWantsToRegister() : bool {
@@ -75,22 +97,15 @@ class RegisterView {
      * check if password has valid lenght
      */
     public function checkValidPasswordLenght() : bool {
-      if(strlen($this->getRequestRegisterPassword()) >= self::MIN_PASSWORD_LENGTH) {
-        return true;
-      } else {
-        throw new \Exception(self::USERNAME_TO_SHORT_MESSAGE);
-      }
+      return strlen($_POST[self::$name]) > self::MIN_PASSWORD_LENGTH;
     }
     
     /**
      * check if username has lenght is valid
      */
     public function checkValidUsernameLenght() {
-      if(strlen($this->getRequestRegisterUsername()) >= self::MIN_USERNAME_LENGTH) {
-        return true;
-      } else {
-        throw new \Exception(self::PASSWORD_TO_SHORT_MESSAGE);
-      }
+      // var_dump(strlen($_POST[self::$name])>= self::MIN_USERNAME_LENGTH);
+     return strlen($_POST[self::$name]) > self::MIN_USERNAME_LENGTH; 
     }
     
     /**
@@ -98,22 +113,15 @@ class RegisterView {
    * @return 
    */
   public function isPasswordEqual() {
-    if($_POST[self::$password] == $_POST[self::$passwordRepeate]) {
-      return true;
-    } else {
-      throw new \Exception(self::PASSWORDS_NOT_EQUAL);
-    }
+    return $_POST[self::$password] == $_POST[self::$passwordRepeate];
+    
   }
     
     /**
      * check if the username contains tags
      */
     public function usernameContainsValidCharacters() {
-      if($this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername())) {
-        return true;
-      } else {
-        throw new \Exception(self::USERNAME_CONTAINS_INVALID_CHARACTERS);
-      }
+     return $this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername());
     }
 
 
