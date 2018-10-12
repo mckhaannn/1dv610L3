@@ -26,7 +26,7 @@ class SessionModel {
    * destroy the session
    */
   public function endSession() {
-    session_unset(); 
+    unset($_SESSION[self::$sessionName]); 
     session_destroy(); 
   }
 

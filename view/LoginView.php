@@ -13,7 +13,17 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private static $register = 'LoginView::Register';
 
-	private $messages = '';
+
+
+	private const LOGIN_WITH_COOKIES_MESSAGE = 'Welcome back with cookie';
+	private const KEPT_LOGGEDIN_MESSAGE = 'Welcome and you will be remembered';
+	private const USERNAME_MISSING = 'Username is missing';
+	private const PASSWORD_MISSING = 'Password is missing';
+	private const FAILED_TO_LOGIN = 'Wrong name or password';
+	private const LOGOUT_MESSAGE = 'Bye bye';
+	private const LOGIN_MESSAGE = 'Weclome';
+	private const EMPTY_STRING = '';
+
 	private $loginModel;
 	
 	public function __construct(\model\LoginModel $lm)
@@ -27,33 +37,40 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response($isLoggedIn, $session) {
-		if($session && $this->userWantsToLogut()){
-			$this->setMessage('Bye bye!');
-			$response = $this->generateLoginFormHTML($this->messages);
-
-		} else if($isLoggedIn && $this->userWantsToKeepLoggedIn()) {
-			$this->setMessage('Welcome and you will be remembered');
-			$response = $this->generateLogoutButtonHTML($this->messages);
-
-		} else if ($this->checkIfCookiesExist()) {
-			$this->setMessage('Welcome back with cookies');  
-			$response = $this->generateLogoutButtonHTML($this->messages);
-
-		} else if($session && $isLoggedIn) {
-			$this->setMessage('Welcome');
-			$response = $this->generateLogoutButtonHTML($this->messages);
-
-		}	else if(!$isLoggedIn && $this->isUsernameAndPasswordNotEmpty()) {
-			$this->setMessage('Wrong name or password');
-			$response = $this->generateLoginFormHTML($this->messages);
-
+	public function response($isSession) {
+		$message = $this->getMessages($isSession);
+		if ($isSession && !$this->userWantsToLogut()) {
+			$response = $this->generateLogoutButtonHTML($message);
 		} else {
-			$this->setMessage('');
-			$response = $this->generateLoginFormHTML($this->messages);
-
+			$response = $this->generateLoginFormHTML($message);
 		}
 		return $response;
+	}
+
+
+	public function getMessages($isSession) {
+		$messages = self::EMPTY_STRING;
+		if ($this->userWantsToLogin()) {
+			if($this->getLoggedInStatus() && $this->userWantsToKeepLoggedIn()) {
+				$messages .= self::KEPT_LOGGEDIN_MESSAGE;
+			}  else if($this->getLoggedInStatus()) {
+				$messages .= self::LOGIN_MESSAGE;
+			} else if (!$this->getLoggedInStatus()) {
+				$messages .= self::FAILED_TO_LOGIN;
+			}	else if(!$this->isUsernameValid()) {
+				$messages .= self::USERNAME_MISSING;
+			} else if (!$this->isPasswordValid()) {
+				$messages .= self::PASSWORD_MISSING;
+			}
+		} else if(!$isSession && $this->userWantsToLogut()){
+			$messages .= self::LOGOUT_MESSAGE;
+		}	else if ($this->checkIfCookiesExist()) {
+			$messages .= self::LOGIN_WITH_COOKIES_MESSAGE;
+		}
+		else {
+			$messages = self::EMPTY_STRING;
+		}
+		return $messages;
 	}
 
 	/**
@@ -109,10 +126,8 @@ class LoginView {
 	 * check if username exits and are not empty if empty set message
 	 */
 	public function isUsernameValid() {
-		if(isset($_POST[self::$name]) && empty($_POST[self::$name])) {
-			$this->setMessage('Username is missing');
-		} else {
-			return isset($_POST[self::$name]) && !empty($_POST[self::$name]);
+		if(isset($_POST[self::$name]) && !empty($_POST[self::$name])) {
+			return true;
 		}
 	}
 
@@ -120,17 +135,17 @@ class LoginView {
 	 * check if password exits and are not empty if empty set message
 	 */
 	public function isPasswordValid() {
-		if(isset($_POST[self::$password]) && empty($_POST[self::$password])) {
-			$this->setMessage('Password is missing');
-		} else {
-			return isset($_POST[self::$password]) && !empty($_POST[self::$password]);
-		}
+		if(isset($_POST[self::$password]) && !empty($_POST[self::$password])) {
+			return true;
+		} 
 	}
 
 	/**
 	 * check if username and password are empty or not
+	 * 
+	 * @return bool
 	 */
-	private function isUsernameAndPasswordNotEmpty() {
+	private function isUsernameAndPasswordNotEmpty() : bool {
 		return !empty($_POST[self::$name]) && !empty($_POST[self::$password]);
 	}
 	
@@ -162,6 +177,10 @@ class LoginView {
 		return isset($_POST[self::$login]);
 	}
 
+	/**
+	 * return true if post on logout
+	 * @return bool
+	 */
 	public function userWantsToLogut() : bool {
 		return isset($_POST[self::$logout]);
 	}
@@ -215,4 +234,7 @@ class LoginView {
     setcookie(self::$cookiePassword, null, -1, '/');
 	}
 
+	public function getLoggedInStatus() {
+		return $this->loginModel->getLoggedInStatus();
+	}
 }

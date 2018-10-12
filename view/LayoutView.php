@@ -13,7 +13,7 @@ class LayoutView {
   private $registerView;
   private $isLoggedIn;
   private $dateTimeView;
-
+  private $sessionExist;
 
   public function reciveViews($v, $rw, $dtv) {
     $this->loginView = $v;
@@ -25,7 +25,7 @@ class LayoutView {
   /**
    * render the selected view
    */
-  public function render($session) {
+  public function render() {
     echo '
       <!DOCTYPE html>
       <html>
@@ -35,27 +35,29 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->generateRegisterUserLink() . '              
-          ' . $this->renderIsLoggedIn($this->isLoggedIn, $session) . '
+          ' . $this->generateRegisterUserLink($this->sessionExist) . '              
+          ' . $this->renderIsLoggedIn($this->sessionExist) . '
           <div class="container">
-          ' . $this->setLayout($session) . '              
+          ' . $this->setLayout($this->sessionExist) . '              
           ' . $this->dateTimeView->showTime() . '              
           </div>
         </body>
       </html>';
   }
-
+  public function getSession($sessionStatus) {
+    $this->sessionExist = $sessionStatus;
+  }
   /**
    * decides what view to be shown
    * 
    * @return string
    */
-  public function setLayout($session) {
+  public function setLayout($isLoggedIn) {
     $html = self::EMPTY_STRING;
     if($this->getRegister()) {
       $html = $this->registerView->response();
     } else {
-      $html = $this->loginView->response($this->isLoggedIn, $session);
+      $html = $this->loginView->response($isLoggedIn);
     }
     return $html;
   }
@@ -64,26 +66,29 @@ class LayoutView {
    * set logged in status
    */
   public function setLoggedInStatus($loginStatus) {
-    $this->isLoggedIn = $loginStatus;
+   return $loginStatus;
   }
   
   
   /**
    * render logged in status
    */
-  private function renderIsLoggedIn($isLoggedIn, $session) {
-    if ($isLoggedIn && $session) {
+  private function renderIsLoggedIn($isSession) {
+    // var_dump($isSession);
+    if ($isSession) {
       return '<h2>Logged in</h2>';
     }
     else {
       return '<h2>Not logged in</h2>';
     }
   }
-  private function generateRegisterUserLink() : string {
-		if($this->getRegister()){
-			return '<a href="?">Back to login</a>';
-		}
-		return '<a href="?' .self::$register . '">Register a new user</a>';
+  private function generateRegisterUserLink($isSession) {
+    if(!$isSession) {
+      if($this->getRegister()){
+        return '<a href="?">Back to login</a>';
+      }
+      return '<a href="?' .self::$register . '">Register a new user</a>';
+    }
   }
   
   private function getRegister() {

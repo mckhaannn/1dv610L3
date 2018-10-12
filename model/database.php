@@ -1,4 +1,9 @@
 <?php
+
+// $dbServername = 'localhost';
+// $dbUsername = 'id7092603_1dv610database';
+// $dbPassword = '1dv610';
+// $dbname = 'id7092603_1dv610database';
   // setup for sql database connection
   $dbServername = 'localhost';
   $dbUsername = 'root';

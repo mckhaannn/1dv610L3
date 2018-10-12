@@ -31,11 +31,10 @@ class MainController{
 
     $this->sendViewsToLayout();
 
-    // if($this->sessionModel->isSession()) {
       if($this->loginView->checkIfCookiesExist()) {
         $this->loginController->routeToLoginWithCookie();
       }
-        
+      
       if($this->loginView->userWantsToLogut()) {
         $this->loginController->routeToLogout();
       }
@@ -46,14 +45,13 @@ class MainController{
       
       if($this->loginView->userWantsToKeepLoggedIn() && $this->loginView->userWantsToLogin()) {
         $this->loginView->setCookies();
-      $this->loginController->routeToLogin();
-      // }
+        $this->loginController->routeToLogin();
+      }
       
-      // if($this->loginView->userWantsToRegister()) {
-
-      // }
-        
-    }
-    $this->layoutView->render($this->sessionModel->isSession());
+      if($this->registerView->userWantsToRegister()) {
+        $this->registerController->routeToRegister();
+      }
+      
+    $this->layoutView->render();
   }
 }

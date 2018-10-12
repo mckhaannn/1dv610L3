@@ -22,14 +22,21 @@ class LoginController {
   public function routeToLogin() {
     if($this->loginView->isUsernameValid() && $this->loginView->isPasswordValid()) {
       $user = new \model\User($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
-      $this->layoutView->setLoggedInStatus($this->loginModel->login($user));
-      $this->sessionModel->setSession($this->loginView->getRequestUserName());
+      $this->loginModel->login($user);
+      if($this->loginView->getLoggedInStatus()) {
+        $this->sessionModel->setSession($this->loginView->getRequestUserName());
+        $this->layoutView->getSession($this->sessionModel->isSession());
+      }
     }
   }
   
   public function routeToLoginWithCookie() {
-    $this->loginModel->getUserCredentials($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
-    $this->layoutView->setLoggedInStatus($this->loginModel->login($this->loginView->getCookieName(), $this->loginView->getCookiePassword()));
+    $user = new \model\User($this->loginView->getCookieName(), $this->loginView->getCookiePassword());
+    $this->loginModel->login($user); 
+    if($this->loginView->getLoggedInStatus()) {
+      $this->sessionModel->setSession($this->loginView->getCookieName());
+      $this->layoutView->getSession($this->sessionModel->isSession());
+    }
   }
   
   public function routeToLogout() {
