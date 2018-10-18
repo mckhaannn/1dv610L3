@@ -42,10 +42,10 @@ class RegisterView {
       }
       if(!$this->checkValidPasswordLenght()) {
         $messages .= self::PASSWORD_TO_SHORT_MESSAGE . self::BREAK_ROW;
-      } else {
-        $messages = self::EMPTY_STRING;
       }
-    }
+    } else {
+       $messages = self::EMPTY_STRING;
+      }
     return $messages;
   }
 
@@ -56,7 +56,7 @@ class RegisterView {
         <legend>Register a new user - Write username and password</legend>
         <p id="' . self::$messageId . '">' . $message . '</p>
         <label for="' . self::$name . '">Username :</label>
-        <input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+        <input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->saveUsername() . '" />
         
         <label for="' . self::$password . '">Password :</label>
         <input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -65,48 +65,43 @@ class RegisterView {
         <input type="password" id="' . self::$passwordRepeate . '" name="' . self::$passwordRepeate . '" />
         
         <input type="submit" name="' . self::$register . '" value="Register" />
-        </fieldset>
-        </form>
-        ';
-      }
-      
+      </fieldset>
+    </form>';
+  }
+    
 
-    /**
-     * set messages
-     */
-    public function setMessage($message) {
-      $this->messages .= $message;
-    }
+  private function saveUsername() {
+    return strip_tags($this->getRequestRegisterUsername());
+  }
     
-    public function getRequestRegisterUsername() {
-      if(isset($_POST[self::$name])) {
-        return $_POST[self::$name];
-      }
+  public function getRequestRegisterUsername() {
+    if(isset($_POST[self::$name])) {
+      return $_POST[self::$name];
     }
-    public function getRequestRegisterPassword() {
-      if(isset($_POST[self::$password])) {
-        return $_POST[self::$password];
-      }
+  }
+  public function getRequestRegisterPassword() {
+    if(isset($_POST[self::$password])) {
+      return $_POST[self::$password];
     }
-    
-    public function userWantsToRegister() : bool {
-      return isset($_POST[self::$register]);
-    }
-    
-    /**
-     * check if password has valid lenght
-     */
-    public function checkValidPasswordLenght() : bool {
-      return strlen($_POST[self::$name]) > self::MIN_PASSWORD_LENGTH;
-    }
-    
-    /**
-     * check if username has lenght is valid
-     */
-    public function checkValidUsernameLenght() {
-      // var_dump(strlen($_POST[self::$name])>= self::MIN_USERNAME_LENGTH);
-     return strlen($_POST[self::$name]) > self::MIN_USERNAME_LENGTH; 
-    }
+  }
+  
+  public function userWantsToRegister() : bool {
+    return isset($_POST[self::$register]);
+  }
+  
+  /**
+   * check if password has valid lenght
+   */
+  public function checkValidPasswordLenght() : bool {
+    return strlen($this->getRequestRegisterPassword()) > self::MIN_PASSWORD_LENGTH;
+  }
+  
+  /**
+   * check if username has lenght is valid
+   */
+  public function checkValidUsernameLenght() {
+    return strlen($this->getRequestRegisterUsername()) > self::MIN_USERNAME_LENGTH; 
+  }
     
     /**
    * check if passwords are equal
@@ -123,33 +118,4 @@ class RegisterView {
     public function usernameContainsValidCharacters() {
      return $this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername());
     }
-
-
-
-      // 	/** 
-	// * Validates the username
-	// * 
-	// * @return bool
-	// */
-	// public function validateUsername() : bool {
-  //   if(isset($_POST[self::$password]) && empty($_POST[self::$password])) {
-	// 		$this->setMessage('Password is missing');
-	// 	} else {
-	//     return isset($_POST[self::$name]) && !empty($_POST[self::$name]);
-  //   }
-  // }
-  // /**
-  //  * validate password
-  //  * @return bool
-  //  */
-  // public function validatePassword() : bool {
-  //   if(isset($_POST[self::$password]) && empty($_POST[self::$password])) {
-  //     $this->setMessage('Password is missing');
-  //   } else {
-  //     return isset($_POST[self::$password]) && !empty($_POST[self::$password]);
-  //   }
-  // }
-
-
-
 }

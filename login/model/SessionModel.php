@@ -5,9 +5,10 @@ namespace model;
 class SessionModel {
 
   private static $sessionName = 'user';
+  private static $registerSession = 'registerSuccess';
 
   public function startSession() {
-    if(!isset($_SESSION[self::$sessionName])) {
+    if(!isset($_SESSION[self::$sessionName]) || !isset($_SESSION[self::$registerSession])) {
       \session_start();
     }
   } 
@@ -29,6 +30,7 @@ class SessionModel {
     unset($_SESSION[self::$sessionName]); 
     session_destroy(); 
   }
-
-  // public function 
+  public function successfullRegister($newUser) {
+    $_SESSION[self::$registerSession] = $newUser;
+  }
 }

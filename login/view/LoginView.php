@@ -12,16 +12,15 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private static $register = 'LoginView::Register';
-
-
+	private static $wall = 'LoginView::Wall';
 
 	private const LOGIN_WITH_COOKIES_MESSAGE = 'Welcome back with cookie';
 	private const KEPT_LOGGEDIN_MESSAGE = 'Welcome and you will be remembered';
 	private const USERNAME_MISSING = 'Username is missing';
 	private const PASSWORD_MISSING = 'Password is missing';
 	private const FAILED_TO_LOGIN = 'Wrong name or password';
-	private const LOGOUT_MESSAGE = 'Bye bye';
-	private const LOGIN_MESSAGE = 'Weclome';
+	private const LOGOUT_MESSAGE = 'Bye bye!';
+	private const LOGIN_MESSAGE = 'Welcome';
 	private const EMPTY_STRING = '';
 
 	private $loginModel;
@@ -30,6 +29,7 @@ class LoginView {
 	{
 		$this->loginModel = $lm;
 	}
+
 	/**
 	 * Create HTTP response
 	 *
@@ -41,33 +41,34 @@ class LoginView {
 		$message = $this->getMessages($isSession);
 		if ($isSession && !$this->userWantsToLogut()) {
 			$response = $this->generateLogoutButtonHTML($message);
-		} else {
+		} else if($isSession) {
+			$message = self::EMPTY_STRING;
+			$response = $this->generateLogoutButtonHTML($message);
+		}else {
 			$response = $this->generateLoginFormHTML($message);
 		}
 		return $response;
 	}
-
 
 	public function getMessages($isSession) {
 		$messages = self::EMPTY_STRING;
 		if ($this->userWantsToLogin()) {
 			if($this->getLoggedInStatus() && $this->userWantsToKeepLoggedIn()) {
 				$messages .= self::KEPT_LOGGEDIN_MESSAGE;
-			}  else if($this->getLoggedInStatus()) {
+			} else if($this->getLoggedInStatus()) {
 				$messages .= self::LOGIN_MESSAGE;
+			}	else if(!$this->usernameExists()) {
+				$messages .= self::USERNAME_MISSING;
+			} else if (!$this->passwordExists()) {
+				$messages .= self::PASSWORD_MISSING;
 			} else if (!$this->getLoggedInStatus()) {
 				$messages .= self::FAILED_TO_LOGIN;
-			}	else if(!$this->isUsernameValid()) {
-				$messages .= self::USERNAME_MISSING;
-			} else if (!$this->isPasswordValid()) {
-				$messages .= self::PASSWORD_MISSING;
 			}
 		} else if(!$isSession && $this->userWantsToLogut()){
 			$messages .= self::LOGOUT_MESSAGE;
 		}	else if ($this->checkIfCookiesExist()) {
 			$messages .= self::LOGIN_WITH_COOKIES_MESSAGE;
-		}
-		else {
+		} else {
 			$messages = self::EMPTY_STRING;
 		}
 		return $messages;
@@ -90,6 +91,7 @@ class LoginView {
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
+				<input type="submit" name="' . self::$wall . '" value="wall"/>
 			</form>
 		';
 	}
@@ -107,7 +109,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->saveUsername() . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -121,20 +123,23 @@ class LoginView {
 		';
 	}
 	
+	private function saveUsername() {
+		return $this->getRequestUserName();
+	}
 
 	/**
-	 * check if username exits and are not empty if empty set message
+	 * check if username exits
 	 */
-	public function isUsernameValid() {
+	public function usernameExists() {
 		if(isset($_POST[self::$name]) && !empty($_POST[self::$name])) {
 			return true;
 		}
 	}
 
 	/**
-	 * check if password exits and are not empty if empty set message
+	 * check if password exits
 	 */
-	public function isPasswordValid() {
+	public function passwordExists() {
 		if(isset($_POST[self::$password]) && !empty($_POST[self::$password])) {
 			return true;
 		} 
@@ -148,56 +153,34 @@ class LoginView {
 	private function isUsernameAndPasswordNotEmpty() : bool {
 		return !empty($_POST[self::$name]) && !empty($_POST[self::$password]);
 	}
-	
-	/**
-	 * return the post in name
-	 * 
-	 * @return string
-	 */
+
 	public function getRequestUserName() {
-		return $_POST[self::$name];
+		if(isset($_POST[self::$name])) {
+			return $_POST[self::$name];
+		}
 	}
 
-	/**
-	 * return the post of password
-	 * 
-	 * @return string
-	 */
 	public function getRequestPassword() {
+		if($_POST[self::$password]) {
 			return $_POST[self::$password];
+		}
 	}
-
-
-	/**
-	 * return true if post on login
-	 * 
-	 * @return bool
-	 */
+	
 	public function userWantsToLogin() : bool {
 		return isset($_POST[self::$login]);
 	}
-
-	/**
-	 * return true if post on logout
-	 * @return bool
-	 */
+	
 	public function userWantsToLogut() : bool {
 		return isset($_POST[self::$logout]);
 	}
-
-	/**
-	 * return true 
-	 * 
-	 * @return bool
-	 */
+	
 	public function userWantsToKeepLoggedIn() : bool {
 		return isset($_POST[self::$keep]);
 	}
-
-
-	/**
-	 * check if cookie exits
-	 */
+	public function goToPostWall() : bool {
+		return isset($_POST[self::$wall]);
+	}
+	
 	public function checkIfCookiesExist() {
 		return isset($_COOKIE[self::$cookieName], $_COOKIE[self::$cookiePassword]);
 	}
@@ -209,19 +192,18 @@ class LoginView {
 		setcookie(self::$cookieName, $this->getRequestUserName(), time() + (86400), "/"); // 86400 = 1 day
 		setcookie(self::$cookiePassword, $this->getRequestPassword(), time() + (86400), "/"); // 86400 = 1 day
 	}
-
-	/**
-	 * return cookie username
-	 */
+  
 	public function getCookieName() {
 		return $_COOKIE[self::$cookieName];
 	}
 
-	/**
-	 * return cookie password
-	 */
 	public function getCookiePassword() {
 		return $_COOKIE[self::$cookiePassword];
+	}
+
+	
+	public function getLoggedInStatus() {
+		return $this->loginModel->getLoggedInStatus();
 	}
 
 	/**
@@ -230,11 +212,7 @@ class LoginView {
 	public function removeCookies() {
 		unset($_COOKIE[self::$cookieName]);
 		unset($_COOKIE[self::$cookiePassword]);
-    setcookie(self::$cookieName, null, -1, '/');
-    setcookie(self::$cookiePassword, null, -1, '/');
-	}
-
-	public function getLoggedInStatus() {
-		return $this->loginModel->getLoggedInStatus();
+		setcookie(self::$cookieName, null, -1, '/');
+		setcookie(self::$cookiePassword, null, -1, '/');
 	}
 }

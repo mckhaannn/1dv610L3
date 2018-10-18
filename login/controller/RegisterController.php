@@ -2,29 +2,29 @@
 
 namespace controller; 
 
-require_once('model/User.php');
+require_once('login/model/User.php');
 
 class RegisterController {
 
   private $registerView;
   private $registerModel;
+  private $sessionModel;
 
-  public function __construct(\view\RegisterView $rv, \model\RegisterModel $rm)
+  public function __construct(\view\RegisterView $rv, \model\RegisterModel $rm, \model\SessionModel $sm, \view\LayoutView $lv)
   {
     $this->registerView = $rv;
     $this->registerModel = $rm;
+    $this->sessionModel = $sm;
+    $this->layoutView = $lv;
   }
 
   public function routeToRegister() {
-    var_dump($this->registerView->getRequestRegisterUsername());
-    var_dump($this->registerView->getRequestRegisterPassword());
-    // var_dump($this->registerView->checkValidUsernameLenght());
-    // var_dump($this->registerView->checkValidPasswordLenght());
-    // var_dump( $this->registerView->usernameContainsValidCharacters());
-    // var_dump($this->registerView->isPasswordEqual());
     if($this->registerView->checkValidUsernameLenght() && $this->registerView->checkValidPasswordLenght() && $this->registerView->usernameContainsValidCharacters() && $this->registerView->isPasswordEqual()) {
       $user = new \model\User($this->registerView->getRequestRegisterUsername(), $this->registerView->getRequestRegisterPassword());
-      $this->registerModel->addUserToDatabase($user);
+      $this->layoutView->setLayout($this->registerModel->addUserToDatabase($user));
+      // if($this->registerModel->getRegisterStatus()) {
+      //   $this->sessionModel->successfullRegister($user);
+      // }
     }
   }
 }

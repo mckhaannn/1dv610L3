@@ -2,7 +2,7 @@
 
 namespace controller;
 
-require_once('model/User.php');
+require_once('login/model/User.php');
 
 class LoginController {
 
@@ -20,7 +20,7 @@ class LoginController {
   }
 
   public function routeToLogin() {
-    if($this->loginView->isUsernameValid() && $this->loginView->isPasswordValid()) {
+    if($this->loginView->usernameExists() && $this->loginView->passwordExists()) {
       $user = new \model\User($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
       $this->loginModel->login($user);
       if($this->loginView->getLoggedInStatus()) {
@@ -42,5 +42,9 @@ class LoginController {
   public function routeToLogout() {
     $this->loginView->removeCookies();
     $this->sessionModel->endSession();
+  }
+
+  public function sendLoggedInStatus() {
+    return $this->loginModel->getLoggedInStatus();
   }
 }

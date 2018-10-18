@@ -31,7 +31,7 @@ class User{
    * return hashed password
    */
   public function getHashedPassword() {
-    return password_hash($this->getPassword(), PASSWORD_DEFAULT);
+    return password_hash($this->name, PASSWORD_DEFAULT);
   }
   
   /**
