@@ -7,6 +7,8 @@ class LayoutView {
   private static $login = 'login';
   private static $register = 'register';
   private static $sessionName = 'user';
+  private static $application = 'application';
+
 
   private const EMPTY_STRING = '';
   
@@ -15,11 +17,13 @@ class LayoutView {
   private $registerView;
   private $isLoggedIn;
   private $dateTimeView;
+  private $applicationLayout;
 
-  public function reciveViews($v, $rw, $dtv) {
+  public function reciveViews($v, $rw, $dtv, $al) {
     $this->loginView = $v;
     $this->registerView = $rw;
     $this->dateTimeView = $dtv;
+    $this->applicationLayout = $al;
   }
   /**
    * render the selected view
@@ -43,9 +47,7 @@ class LayoutView {
         </body>
       </html>';
   }
-  public function getSession($sessionStatus) {
-    $this->sessionExist = $sessionStatus;
-  }
+
   /**
    * decides what view to be shown
    * 
@@ -55,8 +57,12 @@ class LayoutView {
     $html = self::EMPTY_STRING;
     if($this->getRegister()) {
       $html = $this->registerView->response();
-    } else  {
-      $html = $this->loginView->response($this->sessionExist);
+    } else if (isset($_SESSION[self::$application])) {
+      $html = $this->applicationLayout->render();
+    } else if (isset($_SESSION[self::$sessionName])) {
+      $html = $this->loginView->loggedInResponse(false);
+    } else {
+      $html = $this->loginView->loginResponse();
     }
     return $html;
   }
@@ -65,23 +71,28 @@ class LayoutView {
    * render logged in status
    */
   private function renderIsLoggedIn() {
-    if ($this->sessionExist) {
-      return '<h2>Logged in</h2>';
-    }
-    else {
-      return '<h2>Not logged in</h2>';
+    if(!isset($_SESSION[self::$application])) {
+      if (isset($_SESSION[self::$sessionName])) {
+        return '<h2>Logged in</h2>';
+      }
+      else {
+        return '<h2>Not logged in</h2>';
+      }
     }
   }
   private function generateRegisterUserLink() {
-    if(!$this->sessionExist) {
-      if($this->getRegister()){
-        return '<a href="?">Back to login</a>';
+    if(!isset($_SESSION[self::$application])) {
+      if(!isset($_SESSION[self::$sessionName])) {
+        if($this->getRegister()){
+          return '<a href="?">Back to login</a>';
+        }
+        return '<a href="?' .self::$register . '">Register a new user</a>';
       }
-      return '<a href="?' .self::$register . '">Register a new user</a>';
-    }
+    } 
   }
   
   private function getRegister() {
     return isset($_GET[self::$register]);
   }
+
 }

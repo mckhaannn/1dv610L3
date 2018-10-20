@@ -1,25 +1,39 @@
 <?php 
 
 namespace model;
+
 /**
  * Returns the current time of the day
  * 
  * @return string 
  */
-function getTime() {
 
-  date_default_timezone_set('Europe/Stockholm');
+class Time {
 
-  $time = getDate();
+  private $time;
+  private $second;
+  private $minute;
+  private $hour;
+  private $day;
+  private $weekDay;
+  private $month;
+  private $year;
 
-  $second = strftime('%S');
-  $minute = strftime('%M');
-  $hour = strftime('%H');
-  $day = $time['mday'];
-  $weekDay = $time['weekday'];
-  $month = $time['month'];
-  $year = $time['year'];
-
-  return "$weekDay, the {$day}th of $month $year, The time is $hour:$minute:$second";
-
-} 
+  public function __construct()
+  {
+    date_default_timezone_set('Europe/Stockholm');
+    $this->time = getDate();
+    $this->seconds = strftime('%S');
+    $this->minute= strftime('%M');
+    $this->hour = strftime('%H');
+    $this->day = $this->time['mday'];
+    $this->weekDay = $this->time['weekday'];
+    $this->month = $this->time['month'];
+    $this->year = $this->time['year'];  
+  }
+  
+  
+  function getTime() {
+    return "{$this->weekDay}, the {$this->day}th of {$this->month} {$this->year}, The time is {$this->hour}:{$this->minute}:{$this->seconds}";
+  }
+}

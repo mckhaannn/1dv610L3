@@ -11,29 +11,31 @@ class MainController{
   private $registerView;
   private $sessionModel;
   private $dateTimeView;
-  private $wallLayoutView;
+  private $applicationLayout;
+  private $applicationController;
 
-  public function __construct(LoginController $lc, RegisterController $rc, \view\layoutView $lv, \view\LoginView $v, \view\RegisterView $rv, \model\SessionModel $sm, \view\DateTimeView $dtv, \view\WallLayoutView $wlv)
+  public function __construct(LoginController $lc, RegisterController $rc, ApplicationController $ac, \view\layoutView $lv, \view\LoginView $v, \view\RegisterView $rv, \model\SessionModel $sm, \view\DateTimeView $dtv, \view\ApplicationLayout $al)
   {
     $this->loginController = $lc;
     $this->registerController = $rc;
+    $this->applicationController = $ac;
     $this->layoutView = $lv;
     $this->loginView = $v;
     $this->registerView = $rv;
     $this->sessionModel = $sm;
     $this->dateTimeView = $dtv;
-    $this->wallLayoutView = $wlv;
+    $this->applicationLayout = $al;
   }
 
   public function sendViewsToLayout() {
-    $this->layoutView->reciveViews($this->loginView, $this->registerView, $this->dateTimeView, $this->wallLayoutView);
+    $this->layoutView->reciveViews($this->loginView, $this->registerView, $this->dateTimeView, $this->applicationLayout);
   }
 
   public function redirect() {
 
     $this->sendViewsToLayout();
 
-    if($this->sessionModel->isSession()) {
+    if($this->sessionModel->isLoggedInSession()) {
 
     }
     if($this->loginView->checkIfCookiesExist()) {
@@ -56,6 +58,20 @@ class MainController{
     if($this->registerView->userWantsToRegister()) {
       $this->registerController->routeToRegister();
     }
+
+    if($this->loginView->goToPostWall()) {
+    $this->sessionModel->setApplicationSession(true);
+
+      // $this->applicationController->routeToApplication();
+    }
+
+    if($this->applicationLayout->userWantsToExit()) {
+      $this->applicationController->routeToExit();
+    }
+
+    // if($this->wallView->userWantsToCreate()) {
+    //   $this->applicationController->routeToCreate();
+    // }
       
     $this->layoutView->render();
   }

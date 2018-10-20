@@ -9,7 +9,7 @@ class DateTimeView {
 
 	public function showTime() {
 
-		$currentTime = \model\getTime();
-		return '<p>' .  $currentTime . '</p>';
+		$currentTime = new \model\Time();
+		return '<p>' .  $currentTime->getTime() . '</p>';
 	}
 }

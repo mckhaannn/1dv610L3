@@ -25,7 +25,6 @@ class LoginController {
       $this->loginModel->login($user);
       if($this->loginView->getLoggedInStatus()) {
         $this->sessionModel->setSession($this->loginView->getRequestUserName());
-        $this->layoutView->getSession($this->sessionModel->isSession());
       }
     }
   }
@@ -35,13 +34,12 @@ class LoginController {
     $this->loginModel->login($user); 
     if($this->loginView->getLoggedInStatus()) {
       $this->sessionModel->setSession($this->loginView->getCookieName());
-      $this->layoutView->getSession($this->sessionModel->isSession());
     }
   }
   
   public function routeToLogout() {
     $this->loginView->removeCookies();
-    $this->sessionModel->endSession();
+    $this->sessionModel->endLoginSession();
   }
 
   public function sendLoggedInStatus() {

@@ -37,26 +37,36 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response($isSession) {
-		$message = $this->getMessages($isSession);
-		if ($isSession && !$this->userWantsToLogut()) {
-			$response = $this->generateLogoutButtonHTML($message);
-		} else if($isSession) {
-			$message = self::EMPTY_STRING;
-			$response = $this->generateLogoutButtonHTML($message);
-		}else {
-			$response = $this->generateLoginFormHTML($message);
-		}
+	public function loginResponse() {
+		$message = $this->getLoginMessages();
+		$response = $this->generateLoginFormHTML($message);
 		return $response;
 	}
 
-	public function getMessages($isSession) {
+	public function loggedInResponse($isSession) {
+		$message = $this->getLoggedInMessages($isSession);
+		$response =  $this->generateLogoutButtonHTML($message);
+		return $response;
+	}
+
+	private function getLoggedInMessages($isLoggedInSession) {
+		if(!$isLoggedInSession && $this->userWantsToLogut()){
+			$messages .= self::LOGOUT_MESSAGE;
+		}	else if ($this->checkIfCookiesExist()) {
+			$messages .= self::LOGIN_WITH_COOKIES_MESSAGE;
+		} else if($isLoggedInSession) {
+			$messages .= self::LOGIN_MESSAGE;
+		} else {
+			$messages = self::EMPTY_STRING;
+		}
+		return $messages;
+	}
+
+	private function getLoginMessages() {
 		$messages = self::EMPTY_STRING;
 		if ($this->userWantsToLogin()) {
 			if($this->getLoggedInStatus() && $this->userWantsToKeepLoggedIn()) {
 				$messages .= self::KEPT_LOGGEDIN_MESSAGE;
-			} else if($this->getLoggedInStatus()) {
-				$messages .= self::LOGIN_MESSAGE;
 			}	else if(!$this->usernameExists()) {
 				$messages .= self::USERNAME_MISSING;
 			} else if (!$this->passwordExists()) {
@@ -64,14 +74,9 @@ class LoginView {
 			} else if (!$this->getLoggedInStatus()) {
 				$messages .= self::FAILED_TO_LOGIN;
 			}
-		} else if(!$isSession && $this->userWantsToLogut()){
-			$messages .= self::LOGOUT_MESSAGE;
-		}	else if ($this->checkIfCookiesExist()) {
-			$messages .= self::LOGIN_WITH_COOKIES_MESSAGE;
-		} else {
-			$messages = self::EMPTY_STRING;
-		}
+		
 		return $messages;
+		}
 	}
 
 	/**
