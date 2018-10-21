@@ -16,8 +16,8 @@ Implement use case 5
 * Create table row name with varchar(255)
 * Create table row date with timestamp and standard value CURRENT_TIMESTAMP
 
-#link to application 
+# link to application 
 https://1dv610-assignment-2-mt222wz.000webhostapp.com/
 
-#second application
+# second application
 My application is a message wall, where you can create, read, update and delete (CRUD) a post.
