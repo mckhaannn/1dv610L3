@@ -13,37 +13,19 @@ class User{
     $this->password = $password;
   }
   
-  /**
-   * return name of user
-   */
   public function getName() {
     return $this->name;
   }
   
-  /**
-   * return password of user
-   */
   public function getPassword() {
     return $this->password;
   }
   
-  /**
-   * return hashed password
-   */
   public function getHashedPassword() {
     return password_hash($this->name, PASSWORD_DEFAULT);
   }
   
-  /**
-   * removes tags in username
-   */
   public function stripTagsFromUsername() {
     return strip_tags($this->name);
   }
-  
-  
-
-
-
-
 }

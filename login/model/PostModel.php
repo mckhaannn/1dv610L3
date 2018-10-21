@@ -6,7 +6,7 @@ namespace model;
 class PostModel {
 
   /**
-   * send post to database
+   * adds a query to sql db
    */
   public function submitPost($post, $name) {
     include('Database.php');
@@ -17,6 +17,9 @@ class PostModel {
     $result->execute();
   }
 
+  /**
+   * updates query in sql db
+   */
   public function updatePost($post, $name, $id) {
     include('Database.php');
     $sql = "UPDATE posts SET post='$post' WHERE id='$id'  ";
@@ -24,6 +27,10 @@ class PostModel {
     $result->execute();
   }
   
+
+  /**
+   * fetches all data from db
+   */
   public function retrivePosts() {
     include('Database.php');
     $fetchedData = array();
@@ -34,6 +41,10 @@ class PostModel {
     return $row;
   }
 
+
+  /**
+   * deletes a query for sql db
+   */
   public function deletePost($id) {
     var_dump($id);
     include('Database.php');
@@ -42,6 +53,10 @@ class PostModel {
     $result->execute();
   }
   
+
+  /**
+   * check if its the right author
+   */
   public function validAuthor($name, $id) {
     include('Database.php');
     $sql = "SELECT * FROM posts WHERE ID=:ID";

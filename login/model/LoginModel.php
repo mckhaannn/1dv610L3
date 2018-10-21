@@ -7,9 +7,9 @@ class LoginModel {
   private $loggedInStatus = false;
 
   public function login($user) {
+    include('Database.php');
     $name = $user->getName();
     $password = $user->getPassword();
-    include('Database.php');
     $match = $connection->prepare("SELECT * FROM users WHERE name=:name");
     $match->bindParam(':name', $name);
     $match->execute();

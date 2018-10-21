@@ -23,6 +23,9 @@ class ApplicationController {
     $this->selectedPostView = $spv;
   }
  
+  /**
+   * check what action has been made
+   */
   public function routeToApplication() {
     if($this->postView->userWantsToSubmit()) {
       if($this->postView->validPostLength()) {
@@ -37,15 +40,11 @@ class ApplicationController {
     if($this->wallView->userWantsToDelete()){
       $this->postModel->deletePost($this->wallView->getPostId());
     }
+    if($this->applicationLayout->userWantsToExit()) {
+      $this->sessionModel->endApplicationSession();      
+    }
     $this->applicationLayout->render();
   }
-
-  public function routeToCreate() {
-    $this->postView->response();
-  }
   
-  public function routeToExit() {
-    $this->sessionModel->endApplicationSession();
-  }
 
 }

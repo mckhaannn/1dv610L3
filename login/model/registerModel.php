@@ -6,6 +6,10 @@ class RegisterModel {
 
   private $registerStatus = false;
   
+
+  /**
+   * adds a user to the database
+   */
   public function addUserToDatabase($user) {
     include('Database.php');
     $name = $user->getName();
@@ -18,18 +22,6 @@ class RegisterModel {
     return false;
   }
 
-  public function usernameAlreadyExists() {
-    include('db.php');
-    $result = $connection->prepare("SELECT * FROM users WHERE name=:name");
-    $result->bindParam(':name', $this->username);
-    $result->execute();
-    $matches = $result->fetchColumn(); 
-    if($matches) {    
-      return false;
-    } else {
-      return true;
-    }
-  }
   public function getRegisterStatus() {
     return $this->registerStatus;
   }

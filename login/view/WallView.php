@@ -47,20 +47,23 @@ class WallView {
   ';
   }
  
-  public function userWantsToEdit() : bool {
-    return isset($_POST[self::$edit]);
-  }
-  
-  public function userWantsToDelete() : bool {
-    return isset($_POST[self::$delete]);
-  }
   public function getPost() {
     return $_POST[self::$post];
   }
+
   public function getName() {
     return $_POST[self::$nameOnPost];
   }
+
   public function getPostId() {
     return $_POST[self::$postId];
+  }
+  
+  public function userWantsToEdit() : bool {
+    return isset($_POST[self::$edit]);
+  }
+
+  public function userWantsToDelete() : bool {
+    return isset($_POST[self::$delete]);
   }
 }

@@ -18,13 +18,13 @@ class RegisterController {
     $this->layoutView = $lv;
   }
 
+  /**
+   * register a new user
+   */
   public function routeToRegister() {
     if($this->registerView->checkValidUsernameLenght() && $this->registerView->checkValidPasswordLenght() && $this->registerView->usernameContainsValidCharacters() && $this->registerView->isPasswordEqual()) {
       $user = new \model\User($this->registerView->getRequestRegisterUsername(), $this->registerView->getRequestRegisterPassword());
       $this->layoutView->setLayout($this->registerModel->addUserToDatabase($user));
-      // if($this->registerModel->getRegisterStatus()) {
-      //   $this->sessionModel->successfullRegister($user);
-      // }
     }
   }
 }

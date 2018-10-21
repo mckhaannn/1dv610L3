@@ -2,25 +2,28 @@
 
 namespace view;
 
+/**
+ * Creates input for a post
+ */
 class PostView {
 
   private static $submit = 'PostView::Submit';
   private static $post = 'PostView::Post';
-  private static $messageId = 'PostView::MessageId';
   private static $user = 'user';
 
   public function render() {
-    $message = $this->getMessage();
-    $response = $this->generatePostArea($message);
+    $response = $this->generatePostForm();
     return $response;  
   }
   
-  private function generatePostArea($message) {
+  /**
+   * creates a text area 
+   */
+  private function generatePostForm() {
     return '
     <form method="post" > 
       <fieldset>
         <legend>Create Post</legend>
-        <p id="' . self::$messageId . '">' . $message . '</p>
         <textarea name="' . self::$post . '" rows="5" cols="40"></textarea>
         <input type="submit" name="' . self::$submit . '" value="submit" />
       </fieldset>
@@ -28,18 +31,8 @@ class PostView {
     ';
   }
 
-  private function getMessage() {
-    $message = '';
-    if(isset($_POST[self::$submit])) {
-      if(!$this->validPostLength()) {
-        $message = 'Post is empty';
-      }
-      return $message;
-    }
-  }
-
   public function validPostLength() {
-    return strlen($this->getPost()) != 0;
+    return strlen($this->getPost()) > 0;
   }
 
   public function getPost() {

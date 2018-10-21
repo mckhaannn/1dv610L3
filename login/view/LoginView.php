@@ -31,11 +31,7 @@ class LoginView {
 	}
 
 	/**
-	 * Create HTTP response
-	 *
-	 * Should be called after a login attempt has been determined
-	 *
-	 * @return  void BUT writes to standard output and cookies!
+	 * render login view
 	 */
 	public function loginResponse() {
 		$message = $this->getLoginMessages();
@@ -43,10 +39,46 @@ class LoginView {
 		return $response;
 	}
 
+	/**
+	 * logout form
+	 */
 	public function loggedInResponse($isSession) {
 		$message = $this->getLoggedInMessages($isSession);
 		$response =  $this->generateLogoutButtonHTML($message);
 		return $response;
+	}
+
+
+	private function generateLogoutButtonHTML($message) {
+		return '
+			<form  method="post" >
+				<p id="' . self::$messageId . '">' . $message .'</p>
+				<input type="submit" name="' . self::$logout . '" value="logout"/>
+				<input type="submit" name="' . self::$wall . '" value="wall"/>
+			</form>
+		';
+	}
+	
+	private function generateLoginFormHTML($message) {
+		return '
+			<form method="post" > 
+				<fieldset>
+					<legend>Login - enter Username and password</legend>
+					<p id="' . self::$messageId . '">' . $message . '</p>
+					
+					<label for="' . self::$name . '">Username :</label>
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->saveUsername() . '" />
+
+					<label for="' . self::$password . '">Password :</label>
+					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
+
+					<label for="' . self::$keep . '">Keep me logged in  :</label>
+					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
+					
+					<input type="submit" name="' . self::$login . '" value="login" />
+				</fieldset>
+			</form>
+		';
 	}
 
 	private function getLoggedInMessages($isLoggedInSession) {
@@ -79,96 +111,24 @@ class LoginView {
 		}
 	}
 
-	/**
-	 * set messages
-	 */
-	public function setMessage($message) {
-		$this->messages .= $message;
-	} 
-
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
-	private function generateLogoutButtonHTML($message) {
-		return '
-			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $message .'</p>
-				<input type="submit" name="' . self::$logout . '" value="logout"/>
-				<input type="submit" name="' . self::$wall . '" value="wall"/>
-			</form>
-		';
-	}
-	
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
-	private function generateLoginFormHTML($message) {
-		return '
-			<form method="post" > 
-				<fieldset>
-					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '">' . $message . '</p>
-					
-					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->saveUsername() . '" />
-
-					<label for="' . self::$password . '">Password :</label>
-					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
-
-					<label for="' . self::$keep . '">Keep me logged in  :</label>
-					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
-					
-					<input type="submit" name="' . self::$login . '" value="login" />
-				</fieldset>
-			</form>
-		';
-	}
-	
-	private function saveUsername() {
-		return $this->getRequestUserName();
-	}
-
-	/**
-	 * check if username exits
-	 */
 	public function usernameExists() {
 		if(isset($_POST[self::$name]) && !empty($_POST[self::$name])) {
 			return true;
 		}
 	}
 
-	/**
-	 * check if password exits
-	 */
 	public function passwordExists() {
 		if(isset($_POST[self::$password]) && !empty($_POST[self::$password])) {
 			return true;
 		} 
 	}
-
-	/**
-	 * check if username and password are empty or not
-	 * 
-	 * @return bool
-	 */
+	
 	private function isUsernameAndPasswordNotEmpty() : bool {
 		return !empty($_POST[self::$name]) && !empty($_POST[self::$password]);
 	}
 
-	public function getRequestUserName() {
-		if(isset($_POST[self::$name])) {
-			return $_POST[self::$name];
-		}
-	}
-
-	public function getRequestPassword() {
-		if($_POST[self::$password]) {
-			return $_POST[self::$password];
-		}
+	private function saveUsername() {
+		return $this->getRequestUserName();
 	}
 	
 	public function userWantsToLogin() : bool {
@@ -190,25 +150,37 @@ class LoginView {
 		return isset($_COOKIE[self::$cookieName], $_COOKIE[self::$cookiePassword]);
 	}
 
+  
+	public function getCookieName() {
+		return $_COOKIE[self::$cookieName];
+	}
+	
+	public function getCookiePassword() {
+		return $_COOKIE[self::$cookiePassword];
+	}
+	
+	public function getLoggedInStatus() {
+		return $this->loginModel->getLoggedInStatus();
+	}
+
+	public function getRequestUserName() {
+		if(isset($_POST[self::$name])) {
+			return $_POST[self::$name];
+		}
+	}
+
+	public function getRequestPassword() {
+		if($_POST[self::$password]) {
+			return $_POST[self::$password];
+		}
+	}
+	
 	/**
 	 * set cookie for one day
 	 */
 	public function setCookies() {
 		setcookie(self::$cookieName, $this->getRequestUserName(), time() + (86400), "/"); // 86400 = 1 day
 		setcookie(self::$cookiePassword, $this->getRequestPassword(), time() + (86400), "/"); // 86400 = 1 day
-	}
-  
-	public function getCookieName() {
-		return $_COOKIE[self::$cookieName];
-	}
-
-	public function getCookiePassword() {
-		return $_COOKIE[self::$cookiePassword];
-	}
-
-	
-	public function getLoggedInStatus() {
-		return $this->loginModel->getLoggedInStatus();
 	}
 
 	/**

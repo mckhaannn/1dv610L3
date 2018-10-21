@@ -15,7 +15,6 @@ require_once('login/view/LayoutView.php');
 require_once('login/view/RegisterView.php');
 require_once('login/view/PostView.php');
 require_once('login/view/SelectedPostView.php');
-
 require_once('login/view/ApplicationLayout.php');
 require_once('login/view/WallView.php');
 

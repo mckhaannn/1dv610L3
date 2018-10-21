@@ -28,27 +28,6 @@ class RegisterView {
     return $response;
   }
   
-  public function getMessages() {
-    $messages = self::EMPTY_STRING;
-    if($this->userWantsToRegister()) {
-      if(!$this->isPasswordEqual()) {
-        $messages .= self::PASSWORDS_NOT_EQUAL . self::BREAK_ROW;
-      }
-      if(!$this->usernameContainsValidCharacters()) {
-        $messages .= self::USERNAME_CONTAINS_INVALID_CHARACTERS . self::BREAK_ROW;
-      }
-      if(!$this->checkValidUsernameLenght()) {
-        $messages .= self::USERNAME_TO_SHORT_MESSAGE . self::BREAK_ROW;
-      }
-      if(!$this->checkValidPasswordLenght()) {
-        $messages .= self::PASSWORD_TO_SHORT_MESSAGE . self::BREAK_ROW;
-      }
-    } else {
-       $messages = self::EMPTY_STRING;
-      }
-    return $messages;
-  }
-
   public function generateRegisterForm($message) {
     return '
     <form action="?register" method="post" > 
@@ -68,26 +47,32 @@ class RegisterView {
       </fieldset>
     </form>';
   }
-    
+   
+  public function getMessages() {
+    $messages = self::EMPTY_STRING;
+    if($this->userWantsToRegister()) {
+      if(!$this->isPasswordEqual()) {
+        $messages .= self::PASSWORDS_NOT_EQUAL . self::BREAK_ROW;
+      }
+      if(!$this->usernameContainsValidCharacters()) {
+        $messages .= self::USERNAME_CONTAINS_INVALID_CHARACTERS . self::BREAK_ROW;
+      }
+      if(!$this->checkValidUsernameLenght()) {
+        $messages .= self::USERNAME_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      }
+      if(!$this->checkValidPasswordLenght()) {
+        $messages .= self::PASSWORD_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      }
+    } else {
+       $messages = self::EMPTY_STRING;
+      }
+    return $messages;
+  } 
 
   private function saveUsername() {
     return strip_tags($this->getRequestRegisterUsername());
   }
     
-  public function getRequestRegisterUsername() {
-    if(isset($_POST[self::$name])) {
-      return $_POST[self::$name];
-    }
-  }
-  public function getRequestRegisterPassword() {
-    if(isset($_POST[self::$password])) {
-      return $_POST[self::$password];
-    }
-  }
-  
-  public function userWantsToRegister() : bool {
-    return isset($_POST[self::$register]);
-  }
   
   /**
    * check if password has valid lenght
@@ -102,8 +87,8 @@ class RegisterView {
   public function checkValidUsernameLenght() {
     return strlen($this->getRequestRegisterUsername()) > self::MIN_USERNAME_LENGTH; 
   }
-    
-    /**
+  
+  /**
    * check if passwords are equal
    * @return 
    */
@@ -111,11 +96,28 @@ class RegisterView {
     return $_POST[self::$password] == $_POST[self::$passwordRepeate];
     
   }
-    
-    /**
-     * check if the username contains tags
-     */
-    public function usernameContainsValidCharacters() {
-     return $this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername());
+  
+  /**
+   * check if the username contains tags
+   */
+  public function usernameContainsValidCharacters() {
+    return $this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername());
+  }
+
+  public function getRequestRegisterUsername() {
+    if(isset($_POST[self::$name])) {
+      return $_POST[self::$name];
     }
+  }
+  
+  public function getRequestRegisterPassword() {
+    if(isset($_POST[self::$password])) {
+      return $_POST[self::$password];
+    }
+  }
+  
+  public function userWantsToRegister() : bool {
+    return isset($_POST[self::$register]);
+  }
+    
 }

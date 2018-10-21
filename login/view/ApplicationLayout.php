@@ -27,11 +27,18 @@ class ApplicationLayout {
     $this->selectedPostView = $spv;
   }
 
+  /**
+   * render application
+   */
   public function render() {
     $response = $this->renderWall();
     return $response;
   }
 
+
+  /**
+   * creates a div with application content
+   */
   private function renderWall() {
     return '
       <div>
@@ -40,6 +47,9 @@ class ApplicationLayout {
       </div>';
   }
 
+  /**
+   * select what view to show
+   */
   public function selectedView() {
     if($this->userWantsToCreate()) {
       return $this->postView->render();
@@ -59,11 +69,6 @@ class ApplicationLayout {
         </form>
 		';
   }
-   
-  public function setEditStatus($status) {
-    $this->validEdit = $status;
-    var_dump($this->validEdit);
-  }
 
   public function userWantsToExit() : bool {
     return isset($_POST[self::$exit]);
@@ -72,7 +77,4 @@ class ApplicationLayout {
   public function userWantsToCreate() : bool {
     return isset($_POST[self::$create]);
   }
-
-  
-
 }

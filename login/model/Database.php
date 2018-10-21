@@ -1,14 +1,10 @@
 <?php
 
-// $dbServername = 'localhost';
-// $dbUsername = 'id7092603_1dv610database';
-// $dbPassword = '1dv610';
-// $dbname = 'id7092603_1dv610database';
-  // setup for sql database connection
-  $dbServername = 'localhost';
-  $dbUsername = 'root';
-  $dbPassword = '';
-  $dbname = 'logindatabase';
+  require_once('databaseInformation.php');
+  $dbServername = SERVER_NAME;
+  $dbUsername = DB_USERNAME;
+  $dbPassword = DB_PASSWORD;
+  $dbname = DB_NAME;
   try {
     $connection = new PDO("mysql:host=$dbServername;dbname=$dbname;", $dbUsername, $dbPassword);
   } catch(Exception $e) {

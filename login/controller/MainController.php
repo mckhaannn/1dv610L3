@@ -27,17 +27,11 @@ class MainController{
     $this->applicationLayout = $al;
   }
 
-  public function sendViewsToLayout() {
-    $this->layoutView->reciveViews($this->loginView, $this->registerView, $this->dateTimeView, $this->applicationLayout);
-  }
-
+  
   public function redirect() {
-
+    
     $this->sendViewsToLayout();
-
-    if($this->sessionModel->isLoggedInSession()) {
-
-    }
+    
     if($this->loginView->checkIfCookiesExist()) {
       $this->loginController->routeToLoginWithCookie();
     }
@@ -50,7 +44,7 @@ class MainController{
       $this->loginController->routeToLogin();
     }
     
-    if($this->loginView->userWantsToKeepLoggedIn() && $this->loginView->userWantsToLogin()) {
+    if($this->loginView->userWantsToLogin() && $this->loginView->userWantsToKeepLoggedIn()) {
       $this->loginView->setCookies();
       $this->loginController->routeToLogin();
     }
@@ -58,15 +52,17 @@ class MainController{
     if($this->registerView->userWantsToRegister()) {
       $this->registerController->routeToRegister();
     }
-
+    
     if($this->loginView->goToPostWall()) {
       $this->sessionModel->setApplicationSession(true);
     }
-
-    if($this->applicationLayout->userWantsToExit()) {
-      $this->applicationController->routeToExit();
-    }
-
+    
+    
+    
     $this->layoutView->render();
+  }
+
+  public function sendViewsToLayout() {
+    $this->layoutView->reciveViews($this->loginView, $this->registerView, $this->dateTimeView, $this->applicationLayout);
   }
 }

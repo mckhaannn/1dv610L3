@@ -2,8 +2,8 @@
 
 namespace view;
 
-require_once('login/model/time.php');
 
+require_once('login/model/Time.php');
 
 class DateTimeView {
 

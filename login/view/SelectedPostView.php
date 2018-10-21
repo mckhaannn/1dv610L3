@@ -20,18 +20,13 @@ class SelectedPostView {
         <input type="hidden" name="' . self::$postId . '" value="' . $id . '">
         <input type="submit" name="' . self::$update . '" value="update"/>
       </fieldset>
-    </form>
-  ';
+    </form>';
   }
 
   public function validPostLength() {
     return strlen($this->getNewPost()) > self::MINIMUM_POST_LENGTH;
   }
-
-  public function userWantsToUpdate() {
-    return isset($_POST[self::$update]);
-  }
-
+  
   public function getNewPost() {
     if(isset($_POST[self::$newPost])) {
       return $_POST[self::$newPost];
@@ -41,5 +36,8 @@ class SelectedPostView {
     if(isset($_POST[self::$postId])) {
       return $_POST[self::$postId];
     }
+  }
+  public function userWantsToUpdate() {
+    return isset($_POST[self::$update]);
   }
 }

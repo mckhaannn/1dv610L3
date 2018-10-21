@@ -2,14 +2,8 @@
 
 namespace model;
 
-/**
- * Returns the current time of the day
- * 
- * @return string 
- */
-
 class Time {
-
+  
   private $time;
   private $second;
   private $minute;
@@ -18,7 +12,7 @@ class Time {
   private $weekDay;
   private $month;
   private $year;
-
+  
   public function __construct()
   {
     date_default_timezone_set('Europe/Stockholm');
@@ -33,6 +27,12 @@ class Time {
   }
   
   
+  
+  /**
+   * Returns the current time of the day
+   * 
+   * @return string 
+   */
   function getTime() {
     return "{$this->weekDay}, the {$this->day}th of {$this->month} {$this->year}, The time is {$this->hour}:{$this->minute}:{$this->seconds}";
   }

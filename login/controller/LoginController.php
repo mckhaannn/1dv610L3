@@ -19,6 +19,10 @@ class LoginController {
     $this->sessionModel = $sm;
   }
 
+
+  /**
+   * logs in user and set session
+   */
   public function routeToLogin() {
     if($this->loginView->usernameExists() && $this->loginView->passwordExists()) {
       $user = new \model\User($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
@@ -29,6 +33,9 @@ class LoginController {
     }
   }
   
+  /**
+   * log in user with cookie and set session
+   */
   public function routeToLoginWithCookie() {
     $user = new \model\User($this->loginView->getCookieName(), $this->loginView->getCookiePassword());
     $this->loginModel->login($user); 
@@ -37,12 +44,12 @@ class LoginController {
     }
   }
   
+  /**
+   * logs out user
+   */
   public function routeToLogout() {
     $this->loginView->removeCookies();
     $this->sessionModel->endLoginSession();
   }
 
-  public function sendLoggedInStatus() {
-    return $this->loginModel->getLoggedInStatus();
-  }
 }
