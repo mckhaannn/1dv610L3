@@ -16,6 +16,9 @@ Implement use case 5
 * Create table row name with varchar(255)
 * Create table row date with timestamp and standard value CURRENT_TIMESTAMP
 
+Username: test
+Password: asdasd
+
 # link to application 
 https://1dv610-assignment-2-mt222wz.000webhostapp.com/
 
