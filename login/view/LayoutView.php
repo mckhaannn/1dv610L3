@@ -60,7 +60,7 @@ class LayoutView {
     } else if (isset($_SESSION[self::$application])) {
       $html = $this->applicationLayout->render();
     } else if (isset($_SESSION[self::$sessionName])) {
-      $html = $this->loginView->loggedInResponse(false);
+      $html = $this->loginView->loggedInResponse(isset($_SESSION[self::$sessionName]));
     } else {
       $html = $this->loginView->loginResponse();
     }

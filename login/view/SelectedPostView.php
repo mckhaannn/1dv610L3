@@ -15,7 +15,6 @@ class SelectedPostView {
     <form method="post" >
       <fieldset>
         <legend>Created by ' . $name . '</legend>
-        <p>' . $id .'</p>
         <textarea name="' . self::$newPost .'" rows="5" cols="40">' . $post . '</textarea>
         <input type="hidden" name="' . self::$postId . '" value="' . $id . '">
         <input type="submit" name="' . self::$update . '" value="update"/>

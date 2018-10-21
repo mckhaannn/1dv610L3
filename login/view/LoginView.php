@@ -82,6 +82,7 @@ class LoginView {
 	}
 
 	private function getLoggedInMessages($isLoggedInSession) {
+		$messages = self::EMPTY_STRING;
 		if(!$isLoggedInSession && $this->userWantsToLogut()){
 			$messages .= self::LOGOUT_MESSAGE;
 		}	else if ($this->checkIfCookiesExist()) {
