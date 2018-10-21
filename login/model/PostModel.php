@@ -11,38 +11,48 @@ class PostModel {
   public function submitPost($post, $name) {
     include('Database.php');
     $sql = "INSERT INTO posts (post, name) VALUES (:post, :name)";
-    $insertToDb = $connection->prepare($sql);
-    $insertToDb->bindParam(':post', $post);
-    $insertToDb->bindParam(':name', $name);
-    $insertToDb->execute();
+    $result = $connection->prepare($sql);
+    $result->bindParam(':post', $post);
+    $result->bindParam(':name', $name);
+    $result->execute();
+  }
+
+  public function updatePost($post, $name, $id) {
+    include('Database.php');
+    $sql = "UPDATE posts SET post='$post' WHERE id='$id'  ";
+    $result = $connection->prepare($sql);
+    $result->execute();
   }
   
   public function retrivePosts() {
     include('Database.php');
     $fetchedData = array();
-    $result = $connection->prepare("SELECT * FROM posts");
+    $sql = "SELECT * FROM posts";
+    $result = $connection->prepare($sql);
     $result->execute();
     $row = $result->fetchAll(\PDO::FETCH_OBJ);
     return $row;
   }
+
+  public function deletePost($id) {
+    var_dump($id);
+    include('Database.php');
+    $sql = "DELETE FROM posts WHERE id='$id'";
+    $result = $connection->prepare($sql);
+    $result->execute();
+  }
   
   public function validAuthor($name, $id) {
     include('Database.php');
-    $match = $connection->prepare("SELECT * FROM posts WHERE ID=:ID");
-    $match->bindParam('ID', $id);
-    $match->execute();
-    $row = $match->fetchAll(\PDO::FETCH_OBJ);
+    $sql = "SELECT * FROM posts WHERE ID=:ID";
+    $result = $connection->prepare($sql);
+    $result->bindParam('ID', $id);
+    $result->execute();
+    $row = $result->fetchAll(\PDO::FETCH_OBJ);
     if($row[0]->name == $name) {
       return true;
     } else { 
       return false;
     }
-  }
-
-  public function editPost() {
-    include('Database.php');
-    $sql = "UPDATE MyGuests SET post='Doe' WHERE id=2";
-
-
   }
 }  

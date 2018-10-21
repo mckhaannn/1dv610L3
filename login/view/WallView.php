@@ -15,14 +15,12 @@ class WallView {
   private const EMPTY_STRING = '';
 
   private $postModel;
-  private $validEdit = false;
 
   public function __construct(\model\PostModel $pm)
   {
     $this->postModel = $pm;
   }
 
- 
   public function renderPosts() {
     $allPosts = self::EMPTY_STRING;
     $posts = $this->postModel->retrivePosts();
@@ -31,13 +29,13 @@ class WallView {
     }
     return $allPosts; 
   }
-
+  
   private function generatePostForm($name, $post, $date, $id) {
     return '
     <form method="post" >
       <fieldset>
         <legend>Created by ' . $name . '</legend>
-        ' . $this->createEditArea($post) . '
+        <p>' . $post . '</p>
         <p>' . $date . '<p>
         <input type="hidden" name="' . self::$post . '" value="' . $post . '">
         <input type="hidden" name="' . self::$nameOnPost . '" value="' . $name . '">
@@ -47,20 +45,6 @@ class WallView {
       </fieldset>
     </form>
   ';
-  }
-
-  public function setEditStatus($status) {
-    $this->validEdit = $status;
-    var_dump($this->validEdit);
-  }
-
-  public function createEditArea($post) {
-    var_dump($this->validEdit);
-    if($this->validEdit) {
-      return ' <textarea name="' . self::$newPost . '" rows="5" cols="40">' . $post . '</textarea>';
-    } else {
-      return '<p>' . $post . '</p>';
-    }
   }
  
   public function userWantsToEdit() : bool {

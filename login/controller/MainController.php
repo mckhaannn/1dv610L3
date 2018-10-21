@@ -60,19 +60,13 @@ class MainController{
     }
 
     if($this->loginView->goToPostWall()) {
-    $this->sessionModel->setApplicationSession(true);
-
-      // $this->applicationController->routeToApplication();
+      $this->sessionModel->setApplicationSession(true);
     }
 
     if($this->applicationLayout->userWantsToExit()) {
       $this->applicationController->routeToExit();
     }
 
-    // if($this->wallView->userWantsToCreate()) {
-    //   $this->applicationController->routeToCreate();
-    // }
-      
     $this->layoutView->render();
   }
 }

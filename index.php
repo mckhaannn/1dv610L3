@@ -14,6 +14,7 @@ require_once('login/view/DateTimeView.php');
 require_once('login/view/LayoutView.php');
 require_once('login/view/RegisterView.php');
 require_once('login/view/PostView.php');
+require_once('login/view/SelectedPostView.php');
 
 require_once('login/view/ApplicationLayout.php');
 require_once('login/view/WallView.php');
@@ -30,6 +31,7 @@ $sm = new \model\SessionModel();
 
 $pm = new \model\PostModel();
 
+$spv = new \view\SelectedPostView();
 $v = new \view\LoginView($lm);
 $rv = new \view\RegisterView();
 $dtv = new \view\DateTimeView();
@@ -37,9 +39,9 @@ $lv = new \view\LayoutView();
 
 $pv = new \view\PostView();
 $wv =  new \view\WallView($pm);
-$al = new \view\ApplicationLayout($pv, $pm, $wv);
+$al = new \view\ApplicationLayout($pv, $pm, $wv, $spv);
 
-$ac = new \controller\ApplicationController($sm, $wv, $pv, $pm, $al);
+$ac = new \controller\ApplicationController($sm, $wv, $pv, $pm, $al, $spv);
 $rc = new \controller\RegisterController($rv, $rm, $sm, $lv);
 $lc = new \controller\LoginController($v, $lm, $lv, $sm);
 $mc = new \controller\MainController($lc, $rc, $ac, $lv, $v, $rv, $sm, $dtv, $al);
@@ -48,8 +50,8 @@ $mc = new \controller\MainController($lc, $rc, $ac, $lv, $v, $rv, $sm, $dtv, $al
 
 
 $sm->startSession();
-$mc->redirect();
 $ac->routeToApplication();
+$mc->redirect();
 
 
 

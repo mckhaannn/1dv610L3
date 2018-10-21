@@ -31,6 +31,14 @@ class SessionModel {
   public function isApplicationSession() : bool {
     return isset($_SESSION[self::$application]);
   }
+  
+  public function setEditSession($edit) {
+    $_SESSION['edit'] = $edit;
+  }
+
+  public function isEditSession() : bool {
+    return isset($_SESSION['edit']);
+  }
 
   /**
    * destroy the session
