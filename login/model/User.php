@@ -22,10 +22,11 @@ class User{
   }
   
   public function getHashedPassword() {
-    return password_hash($this->name, PASSWORD_DEFAULT);
+    return password_hash($this->password, PASSWORD_DEFAULT);
   }
   
   public function stripTagsFromUsername() {
     return strip_tags($this->name);
   }
+
 }

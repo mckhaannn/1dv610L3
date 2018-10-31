@@ -2,6 +2,8 @@
 
 namespace view;
 
+require_once('login/view/Messages.php');
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -13,15 +15,6 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private static $register = 'LoginView::Register';
 	private static $wall = 'LoginView::Wall';
-
-	private const LOGIN_WITH_COOKIES_MESSAGE = 'Welcome back with cookie';
-	private const KEPT_LOGGEDIN_MESSAGE = 'Welcome and you will be remembered';
-	private const USERNAME_MISSING = 'Username is missing';
-	private const PASSWORD_MISSING = 'Password is missing';
-	private const FAILED_TO_LOGIN = 'Wrong name or password';
-	private const LOGOUT_MESSAGE = 'Bye bye!';
-	private const LOGIN_MESSAGE = 'Welcome';
-	private const EMPTY_STRING = '';
 
 	private $loginModel;
 	
@@ -82,31 +75,31 @@ class LoginView {
 	}
 
 	private function getLoggedInMessages($isLoggedInSession) {
-		$messages = self::EMPTY_STRING;
+		$messages = \view\Messages::EMPTY_STRING;
 		if(!$isLoggedInSession && $this->userWantsToLogut()){
-			$messages .= self::LOGOUT_MESSAGE;
+			$messages .= \view\Messages::LOGOUT_MESSAGE;
 		}	else if ($this->checkIfCookiesExist()) {
-			$messages .= self::LOGIN_WITH_COOKIES_MESSAGE;
+			$messages .= \view\Messages::LOGIN_WITH_COOKIES_MESSAGE;
 		} else if($isLoggedInSession) {
-			$messages .= self::LOGIN_MESSAGE;
+			$messages .= \view\Messages::LOGIN_MESSAGE;
 		} else {
-			$messages = self::EMPTY_STRING;
+			$messages = \view\Messages::EMPTY_STRING;
 		}
 		return $messages;
 	}
 
 	private function getLoginMessages() {
-		$messages = self::EMPTY_STRING;
+		$messages = \view\Messages::EMPTY_STRING;
 		if ($this->userWantsToLogin()) {
 			if($this->getLoggedInStatus() && $this->userWantsToKeepLoggedIn()) {
-				$messages .= self::KEPT_LOGGEDIN_MESSAGE;
+				$messages .= \view\Messages::KEPT_LOGGEDIN_MESSAGE;
 			}	else if(!$this->usernameExists()) {
-				$messages .= self::USERNAME_MISSING;
+				$messages .= \view\Messages::USERNAME_MISSING;
 			} else if (!$this->passwordExists()) {
-				$messages .= self::PASSWORD_MISSING;
+				$messages .= \view\Messages::PASSWORD_MISSING;
 			} else if (!$this->getLoggedInStatus()) {
-				$messages .= self::FAILED_TO_LOGIN;
-			}
+				$messages .= \view\Messages::FAILED_TO_LOGIN;
+			} 
 		
 		return $messages;
 		}

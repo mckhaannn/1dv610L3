@@ -13,7 +13,14 @@ class ApplicationController {
   private $applicationLayout;
   private $selectedPostView;
 
-  public function __construct(\model\SessionModel $sm, \view\WallView $wv, \view\PostView $pv, \model\PostModel $pm, \view\ApplicationLayout $al, \view\SelectedPostView $spv)
+  public function __construct(
+    \model\SessionModel $sm,
+    \view\WallView $wv,
+    \view\PostView $pv,
+    \model\PostModel $pm, 
+    \view\ApplicationLayout $al,
+    \view\SelectedPostView $spv
+  )
   {
     $this->sessionModel = $sm;
     $this->wallView = $wv;

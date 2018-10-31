@@ -14,8 +14,17 @@ class MainController{
   private $applicationLayout;
   private $applicationController;
   
-  public function __construct(LoginController $lc, RegisterController $rc, ApplicationController $ac, \view\layoutView $lv, \view\LoginView $v,
-                              \view\RegisterView $rv, \model\SessionModel $sm, \view\DateTimeView $dtv, \view\ApplicationLayout $al)
+  public function __construct(
+    LoginController $lc,
+    RegisterController $rc,
+    ApplicationController $ac,
+    \view\layoutView $lv,
+    \view\LoginView $v,
+    \view\RegisterView $rv,
+    \model\SessionModel $sm,
+    \view\DateTimeView $dtv,
+    \view\ApplicationLayout $al
+  )
   {
     $this->loginController = $lc;
     $this->registerController = $rc;

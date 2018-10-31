@@ -2,28 +2,34 @@
 
 namespace model;
 
+require_once('Database.php');
 
 class PostModel {
 
+
+  public function __construct()
+  {
+    $this->database = new \model\Database();
+    $this->connection = $this->database->server();
+  }
+
   /**
-   * adds a query to sql db
+   * adds a post to sql db
    */
   public function submitPost($post, $name) {
-    include('Database.php');
     $sql = "INSERT INTO posts (post, name) VALUES (:post, :name)";
-    $result = $connection->prepare($sql);
+    $result = $this->connection->prepare($sql);
     $result->bindParam(':post', $post);
     $result->bindParam(':name', $name);
     $result->execute();
   }
 
   /**
-   * updates query in sql db
+   * updates post in sql db
    */
   public function updatePost($post, $name, $id) {
-    include('Database.php');
     $sql = "UPDATE posts SET post='$post' WHERE id='$id'  ";
-    $result = $connection->prepare($sql);
+    $result = $this->connection->prepare($sql);
     $result->execute();
   }
   
@@ -32,10 +38,9 @@ class PostModel {
    * fetches all data from db
    */
   public function retrivePosts() {
-    include('Database.php');
     $fetchedData = array();
     $sql = "SELECT * FROM posts";
-    $result = $connection->prepare($sql);
+    $result = $this->connection->prepare($sql);
     $result->execute();
     $row = $result->fetchAll(\PDO::FETCH_OBJ);
     return $row;
@@ -43,13 +48,11 @@ class PostModel {
 
 
   /**
-   * deletes a query for sql db
+   * deletes a post for sql db
    */
   public function deletePost($id) {
-    var_dump($id);
-    include('Database.php');
     $sql = "DELETE FROM posts WHERE id='$id'";
-    $result = $connection->prepare($sql);
+    $result = $this->connection->prepare($sql);
     $result->execute();
   }
   
@@ -58,9 +61,8 @@ class PostModel {
    * check if its the right author
    */
   public function validAuthor($name, $id) {
-    include('Database.php');
     $sql = "SELECT * FROM posts WHERE ID=:ID";
-    $result = $connection->prepare($sql);
+    $result = $this->connection->prepare($sql);
     $result->bindParam('ID', $id);
     $result->execute();
     $row = $result->fetchAll(\PDO::FETCH_OBJ);

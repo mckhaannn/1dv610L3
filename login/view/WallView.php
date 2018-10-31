@@ -24,8 +24,8 @@ class WallView {
   public function renderPosts() {
     $allPosts = self::EMPTY_STRING;
     $posts = $this->postModel->retrivePosts();
-    for($i = 0; $i < count($posts); $i++) {
-      $allPosts .= $this->generatePostForm($posts[$i]->name, $posts[$i]->post,$posts[$i]->date, $posts[$i]->ID);
+    foreach ($posts as $key) {
+      $allPosts .= $this->generatePostForm($key->name, $key->post,$key->date, $key->ID);
     }
     return $allPosts; 
   }

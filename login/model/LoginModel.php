@@ -2,19 +2,30 @@
 
 namespace model;
 
+require_once('Database.php');
+
 class LoginModel {
+
   
   private $loggedInStatus = false;
 
+  public function __construct()
+  {
+    $this->database = new \model\Database();
+    $this->connection = $this->database->server();
+  }
+
   public function login($user) {
-    include('Database.php');
     $name = $user->getName();
+    var_dump($name);
     $password = $user->getPassword();
-    $match = $connection->prepare("SELECT * FROM users WHERE name=:name");
+    var_dump($password);
+    $match = $this->connection->prepare("SELECT * FROM users WHERE name=:name LIMIT 1");
     $match->bindParam(':name', $name);
     $match->execute();
     $results = $match->fetch();
     if($results && password_verify($password, $results['password'])) {
+      echo 'hi';
       $this->loggedInStatus = true;
     }
   }

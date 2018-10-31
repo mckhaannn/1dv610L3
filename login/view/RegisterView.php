@@ -2,6 +2,8 @@
 
 namespace view;
 
+require_once('login/view/Messages.php');
+
 class RegisterView {
 
   private static $register = 'RegisterView::Register';
@@ -10,18 +12,14 @@ class RegisterView {
 	private static $password = 'RegisterView::Password';
   private static $passwordRepeate = 'RegisterView::PasswordRepeat';
 
-  private const USERNAME_TO_SHORT_MESSAGE = 'Username has too few characters, at least 3 characters.';
-  private const PASSWORD_TO_SHORT_MESSAGE = 'Password has too few characters, at least 6 characters.';
-  private const USERNAME_CONTAINS_INVALID_CHARACTERS = 'Username contains invalid characters.';
-  private const PASSWORDS_NOT_EQUAL = 'Passwords do not match.';
-  private const BREAK_ROW = '<br>';
-  private const EMPTY_STRING = '';
+  private $userCredentials;
+  private $message = \view\Messages::EMPTY_STRING;
 
-  private const MIN_USERNAME_LENGTH = 2;
-  private const MIN_PASSWORD_LENGTH = 5;
-  
-  private $message = self::EMPTY_STRING;
-  
+  public function __construct(\model\UserCredentials $uc)
+  {
+    $this->userCredentials = $uc;
+  }
+
   public function response() {
     $message = $this->getMessages();
     $response = $this->generateRegisterForm($message);
@@ -49,43 +47,31 @@ class RegisterView {
   }
    
   public function getMessages() {
-    $messages = self::EMPTY_STRING;
+    $messages = \view\Messages::EMPTY_STRING;
     if($this->userWantsToRegister()) {
       if(!$this->isPasswordEqual()) {
-        $messages .= self::PASSWORDS_NOT_EQUAL . self::BREAK_ROW;
+        $messages .= \view\Messages::PASSWORDS_NOT_EQUAL . \view\Messages::BREAK_ROW;
       }
-      if(!$this->usernameContainsValidCharacters()) {
-        $messages .= self::USERNAME_CONTAINS_INVALID_CHARACTERS . self::BREAK_ROW;
+      if(!$this->userCredentials->isUsernameContainingValidCharacters()) {
+        $messages .= \view\Messages::USERNAME_CONTAINS_INVALID_CHARACTERS . \view\Messages::BREAK_ROW;
       }
-      if(!$this->checkValidUsernameLenght()) {
-        $messages .= self::USERNAME_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      if(!$this->userCredentials->checkValidUsernameLenght()) {
+        $messages .= \view\Messages::USERNAME_TO_SHORT_MESSAGE . \view\Messages::BREAK_ROW;
       }
-      if(!$this->checkValidPasswordLenght()) {
-        $messages .= self::PASSWORD_TO_SHORT_MESSAGE . self::BREAK_ROW;
+      if(!$this->userCredentials->checkValidPasswordLength()) {
+        $messages .= \view\Messages::PASSWORD_TO_SHORT_MESSAGE . \view\Messages::BREAK_ROW;
+      }
+      if(!$this->userCredentials->doesUsernameExist()) {
+        $messages .= \view\Messages::USERNAME_EXISTS . \view\Messages::BREAK_ROW;
       }
     } else {
-       $messages = self::EMPTY_STRING;
+       $messages = \view\Messages::EMPTY_STRING;
       }
     return $messages;
   } 
 
   private function saveUsername() {
     return strip_tags($this->getRequestRegisterUsername());
-  }
-    
-  
-  /**
-   * check if password has valid lenght
-   */
-  public function checkValidPasswordLenght() : bool {
-    return strlen($this->getRequestRegisterPassword()) > self::MIN_PASSWORD_LENGTH;
-  }
-  
-  /**
-   * check if username has lenght is valid
-   */
-  public function checkValidUsernameLenght() {
-    return strlen($this->getRequestRegisterUsername()) > self::MIN_USERNAME_LENGTH; 
   }
   
   /**
@@ -97,12 +83,6 @@ class RegisterView {
     
   }
   
-  /**
-   * check if the username contains tags
-   */
-  public function usernameContainsValidCharacters() {
-    return $this->getRequestRegisterUsername() == strip_tags($this->getRequestRegisterUsername());
-  }
 
   public function getRequestRegisterUsername() {
     if(isset($_POST[self::$name])) {
