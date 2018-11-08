@@ -9,6 +9,7 @@ class SelectedPostView {
   private static $postId = "SelectedPostView::PostId";
 
   private const MINIMUM_POST_LENGTH = 0;
+  private const MAXIMUM_POST_LENGTH = 255;
 
   public function render($post, $name, $id) {
     return '
@@ -22,8 +23,12 @@ class SelectedPostView {
     </form>';
   }
 
-  public function validPostLength() {
-    return strlen($this->getNewPost()) > self::MINIMUM_POST_LENGTH;
+  public function minimumPostLength() {
+    return strlen($this->getNewPost()) > self::MINIMUM_POST_LENGTH ;
+  }
+
+  public function maximumPostLength() {
+    return strlen($this->getNewPost() < self::MAXIMUM_POST_LENGTH);
   }
   
   public function getNewPost() {

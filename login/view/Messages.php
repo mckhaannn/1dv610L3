@@ -18,5 +18,10 @@ class Messages {
 	const LOGOUT_MESSAGE = 'Bye bye!';
   const LOGIN_MESSAGE = 'Welcome';
   const USERNAME_EXISTS = 'User exists, pick another username.';
+  const POST_TO_SHORT = 'Post is to short minimum 1 character.';
+  const POST_TO_LONG = 'Post is to long maximum 255 characters.';
+  const POST_CONTAINS_INVALID_CHARACTERS = 'Post contains invalid characters.';
+  const POST_WAS_ADDED = 'Post was added to statusboard.';
+  const POST_DELETED = '<b>Post was deleted with id: </b>';
 
 }

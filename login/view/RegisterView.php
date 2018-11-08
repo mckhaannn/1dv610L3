@@ -2,8 +2,6 @@
 
 namespace view;
 
-require_once('login/view/Messages.php');
-
 class RegisterView {
 
   private static $register = 'RegisterView::Register';
@@ -13,7 +11,6 @@ class RegisterView {
   private static $passwordRepeate = 'RegisterView::PasswordRepeat';
 
   private $userCredentials;
-  private $message = \view\Messages::EMPTY_STRING;
 
   public function __construct(\model\UserCredentials $uc)
   {

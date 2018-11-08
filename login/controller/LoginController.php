@@ -32,7 +32,6 @@ class LoginController {
     if($this->loginView->usernameExists() && $this->loginView->passwordExists()) {
       $user = new \model\User($this->loginView->getRequestUserName(), $this->loginView->getRequestPassword());
       $this->loginModel->login($user);
-      // var_dump($this->loginModel->getLoggedInStatus());
       if($this->loginModel->getLoggedInStatus()) {
         $this->sessionModel->setSession($this->loginView->getRequestUserName());
       }

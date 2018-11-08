@@ -2,17 +2,17 @@
 
 namespace view;
 
-class WallView {
+require_once('login/view/Messages.php');
 
-  private static $edit = 'WallView::Edit';
-  private static $delete = 'WallView::Delete';
-  private static $postId = 'WallView::PostId';
-  private static $newPost = 'WallView::NewPost';
+class StatusBoardView {
 
-  private static $post = 'WallView::Post';
-  private static $nameOnPost = 'WallView::NameOnPost';
+  private static $edit = 'edit';
+  private static $delete = 'StatusBoardView::Delete';
+  private static $postId = 'StatusBoardView::PostId';
+  private static $newPost = 'StatusBoardView::NewPost';
 
-  private const EMPTY_STRING = '';
+  private static $post = 'StatusBoardView::Post';
+  private static $nameOnPost = 'StatusBoardView::NameOnPost';
 
   private $postModel;
 
@@ -22,7 +22,7 @@ class WallView {
   }
 
   public function renderPosts() {
-    $allPosts = self::EMPTY_STRING;
+    $allPosts = \view\Messages::EMPTY_STRING;
     $posts = $this->postModel->retrivePosts();
     foreach ($posts as $key) {
       $allPosts .= $this->generatePostForm($key->name, $key->post,$key->date, $key->ID);
@@ -48,15 +48,21 @@ class WallView {
   }
  
   public function getPost() {
-    return $_POST[self::$post];
+    if(isset($_POST[self::$post])) {
+      return $_POST[self::$post];
+    }
   }
 
   public function getName() {
-    return $_POST[self::$nameOnPost];
+    if(isset($_POST[self::$nameOnPost])) {
+      return $_POST[self::$nameOnPost];
+    }
   }
 
   public function getPostId() {
-    return $_POST[self::$postId];
+    if(isset($_POST[self::$postId])) {
+      return $_POST[self::$postId];
+    }
   }
   
   public function userWantsToEdit() : bool {

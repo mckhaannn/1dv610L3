@@ -6,11 +6,11 @@ require_once('Database.php');
 
 class PostModel {
 
-
   public function __construct()
   {
     $this->database = new \model\Database();
     $this->connection = $this->database->server();
+    $this->postStatus = false;
   }
 
   /**
@@ -22,6 +22,11 @@ class PostModel {
     $result->bindParam(':post', $post);
     $result->bindParam(':name', $name);
     $result->execute();
+    $this->postStatus = true;
+  }
+
+  public function isPostAdded() {
+    return $this->postStatus;
   }
 
   /**

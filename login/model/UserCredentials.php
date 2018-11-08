@@ -33,7 +33,7 @@ class UserCredentials {
   public function checkValidUsernameLenght() {
     return strlen($this->user->getName()) > self::MIN_USERNAME_LENGTH; 
   }
-
+  
   public function doesUsernameExist() {
     $name = $this->user->getName();
     $result = $this->connection->prepare("SELECT * FROM users WHERE name=:name");

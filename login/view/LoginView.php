@@ -2,8 +2,6 @@
 
 namespace view;
 
-require_once('login/view/Messages.php');
-
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -47,7 +45,7 @@ class LoginView {
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
-				<input type="submit" name="' . self::$wall . '" value="wall"/>
+				<input type="submit" name="' . self::$wall . '" value="StatusBoard"/>
 			</form>
 		';
 	}
@@ -110,7 +108,7 @@ class LoginView {
 			return true;
 		}
 	}
-
+ 
 	public function passwordExists() {
 		if(isset($_POST[self::$password]) && !empty($_POST[self::$password])) {
 			return true;
