@@ -11,6 +11,20 @@ class PostModel {
     $this->database = new \model\Database();
     $this->connection = $this->database->server();
     $this->postStatus = false;
+    $this->validAuthorStatus = false;
+  }
+  
+  /**
+   * return post status
+   */
+  public function isPostAdded() {
+    return $this->postStatus;
+  }
+  /**
+   * return post status
+   */
+  public function isValidAuthor() {
+    return $this->validAuthorStatus;
   }
 
   /**
@@ -23,10 +37,6 @@ class PostModel {
     $result->bindParam(':name', $name);
     $result->execute();
     $this->postStatus = true;
-  }
-
-  public function isPostAdded() {
-    return $this->postStatus;
   }
 
   /**
@@ -53,7 +63,7 @@ class PostModel {
 
 
   /**
-   * deletes a post for sql db
+   * deletes a post from sql db
    */
   public function deletePost($id) {
     $sql = "DELETE FROM posts WHERE id='$id'";
@@ -72,9 +82,9 @@ class PostModel {
     $result->execute();
     $row = $result->fetchAll(\PDO::FETCH_OBJ);
     if($row[0]->name == $name) {
-      return true;
+      $this->validAuthorStatus = true;
     } else { 
-      return false;
+      $this->validAuthorStatus = false;
     }
   }
 }  

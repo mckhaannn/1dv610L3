@@ -6,19 +6,14 @@ class ApplicationLayout {
 
   private static $exit = 'StatusBoardView::Exit';
   private static $wall = 'StatusBoardView::Wall';
-  // private static $create = 'StatusBoardView::Create';
-  private static $edit = 'StatusBoardView::Edit';
   private static $messageId = 'StatusBoardView::MessageId';
-  
   private static $create = 'create';
-  // private static $edit = 'edit';
-  private static $walls = '';
+  private static $statusBoard = '';
 
   private $postView;
   private $postModel;
   private $StatusBoardView;
   private $selectedPostView;
-  private $validEdit;
 
   private const EMPTY_STRING = '';
 
@@ -38,14 +33,14 @@ class ApplicationLayout {
     return $response;
   }
 
-
+ 
   /**
    * creates a div with application content
    */
   private function renderWall() {
     return '
       <div>
-      ' . $this->deleteMessage() . '
+      ' . $this->displayMessage() . '
       ' . $this->selectedView() . '
       ' .$this->generateLogoutExitHTML(). '
       </div>';
@@ -55,35 +50,34 @@ class ApplicationLayout {
    * select what view to show
    */
   public function selectedView() {
-    // var_dump($this->statusBoardView->userWantsToDelete());
     if($this->userWantsToCreate()) {
       return $this->postView->render();
-    } else if(isset($_POST[self::$edit])) {
-      return $this->selectedPostView->render($this->statusBoardView->getPost(), $this->statusBoardView->getName(), $this->statusBoardView->getPostId());
     } else {
-      return $this->statusBoardView->renderPosts();
+      return $this->statusBoardView->render();
     }
   }
 
   private function generateLogoutExitHTML() {
 		return '
       <form  method="post" >
+      <input type="submit" name="' . self::$exit . '" value="Exit"/>
         <a href="?' .self::$create . '">createStatus</a>
-        <a href="?' .self::$walls . '">StatusBoard</a>
-        <input type="submit" name="' . self::$exit . '" value="Exit"/>
+        <a href="?' .self::$statusBoard . '">StatusBoard</a>
       </form>
     ';
   }
 
-  private function deleteMessage() {
+  private function displayMessage() {
     $message = \view\Messages::EMPTY_STRING;
-    if($this->statusBoardView->userWantsToDelete()) {
-      $message = \view\Messages::POST_DELETED . $this->statusBoardView->getPostId();
-    } else {
-      $message = \view\Messages::EMPTY_STRING;
-    }
+    if($this->statusBoardView->userWantsToDelete() && $this->postModel->isValidAuthor()) {
+      $message = \view\Messages::POST_DELETED;
+    } else if ($this->statusBoardView->userWantsToDelete() && !$this->postModel->isValidAuthor()) {
+      $message = \view\Messages::NOT_VALID_AUTHOR;
+    } 
+
     return $message;
   }
+
   public function userWantsToExit() : bool {
     return isset($_POST[self::$exit]);
   }

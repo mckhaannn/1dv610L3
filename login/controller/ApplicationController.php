@@ -7,7 +7,7 @@ class ApplicationController {
 
 
   private $sessionModel;
-  private $StatusBoardView;
+  private $statusBoardView;
   private $postView;
   private $postModel;
   private $applicationLayout;
@@ -25,7 +25,7 @@ class ApplicationController {
   )
   {
     $this->sessionModel = $sm;
-    $this->StatusBoardView = $wv;
+    $this->statusBoardView = $wv;
     $this->postView = $pv;
     $this->postModel = $pm;
     $this->applicationLayout =  $al;
@@ -41,25 +41,21 @@ class ApplicationController {
       $this->postValidation->getPostData($this->postView->getPost());
       if($this->postValidation->isValidPost()) {
         $this->postModel->submitPost($this->postView->getPost(), $this->postView->getSessionName());
+        $this->applicationLayout->render();
       }
     }
-    if($this->selectedPostView->userWantsToUpdate()) {
-      if($this->selectedPostView->minimumPostLength() && $this->selectedPostView->maximumPostLength()) {
-        $this->postModel->updatePost(
-          $this->selectedPostView->getNewPost(),
-          $this->postView->getSessionName(),
-          $this->selectedPostView->getPostId()
-        );
+
+    if($this->statusBoardView->userWantsToDelete()){
+      $this->postModel->validAuthor($this->postView->getSessionName(), $this->statusBoardView->getPostId());
+      if($this->postModel->isValidAuthor()) {
+        $this->postModel->deletePost($this->statusBoardView->getPostId());
       }
     }
-    if($this->StatusBoardView->userWantsToDelete()){
-      $this->postModel->deletePost($this->StatusBoardView->getPostId());
-    }
+
     if($this->applicationLayout->userWantsToExit()) {
       $this->sessionModel->endApplicationSession();      
     }
+
     $this->applicationLayout->render();
   }
-  
-
 }

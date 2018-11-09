@@ -4,7 +4,7 @@ namespace model;
 
 class PostValidation {
 
-  private const MAXIMUM_POST_LENGTH = 255;
+  private const MAXIMUM_POST_LENGTH = 50;
   private const MINIMUM_POST_LENGTH = 0;
 
   public function getPostData($post) {

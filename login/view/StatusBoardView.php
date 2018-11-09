@@ -6,11 +6,10 @@ require_once('login/view/Messages.php');
 
 class StatusBoardView {
 
-  private static $edit = 'edit';
   private static $delete = 'StatusBoardView::Delete';
   private static $postId = 'StatusBoardView::PostId';
   private static $newPost = 'StatusBoardView::NewPost';
-
+  private static $messageID = 'StatusBoardView::MessageID';
   private static $post = 'StatusBoardView::Post';
   private static $nameOnPost = 'StatusBoardView::NameOnPost';
 
@@ -21,15 +20,24 @@ class StatusBoardView {
     $this->postModel = $pm;
   }
 
-  public function renderPosts() {
-    $allPosts = \view\Messages::EMPTY_STRING;
-    $posts = $this->postModel->retrivePosts();
-    foreach ($posts as $key) {
-      $allPosts .= $this->generatePostForm($key->name, $key->post,$key->date, $key->ID);
-    }
-    return $allPosts; 
+  public function render() {
+    $showPosts = $this->renderPosts();
+    return $showPosts; 
   }
   
+  private function renderPosts() {
+    $allPosts = \view\Messages::EMPTY_STRING;
+    $posts = $this->postModel->retrivePosts();
+    if(empty($posts)) {
+      $allPosts = \view\Messages::NO_POSTS;
+    } else {
+      foreach ($posts as $key) {
+        $allPosts .= $this->generatePostForm($key->name, $key->post,$key->date, $key->ID);
+      }
+    }
+    return $allPosts;
+  }
+
   private function generatePostForm($name, $post, $date, $id) {
     return '
     <form method="post" >
@@ -40,13 +48,13 @@ class StatusBoardView {
         <input type="hidden" name="' . self::$post . '" value="' . $post . '">
         <input type="hidden" name="' . self::$nameOnPost . '" value="' . $name . '">
         <input type="hidden" name="' . self::$postId . '" value="' . $id . '">
-        <input type="submit" name="' . self::$edit . '" value="edit"/>
         <input type="submit" name="' . self::$delete . '" value="delete"/>
       </fieldset>
     </form>
   ';
   }
- 
+
+
   public function getPost() {
     if(isset($_POST[self::$post])) {
       return $_POST[self::$post];
@@ -63,10 +71,6 @@ class StatusBoardView {
     if(isset($_POST[self::$postId])) {
       return $_POST[self::$postId];
     }
-  }
-  
-  public function userWantsToEdit() : bool {
-    return isset($_POST[self::$edit]);
   }
 
   public function userWantsToDelete() : bool {
