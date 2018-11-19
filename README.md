@@ -1,21 +1,12 @@
 # Login_1DV608
 Interface repository for 1DV608 assignment 2 and 4
 
-# TODO
-Implement use case 5
-
 # usage
-* Create table users
-* Create table row ID with autoincrement
-* Create table row name with varchar(255)
-* Create table row password with varchar(255)
+How to create the needed tables.
 
-* Create table posts
-* Create table row ID with autoincrement
-* Create table row post with varchar(255)
-* Create table row name with varchar(255)
-* Create table row date with timestamp and standard value CURRENT_TIMESTAMP
+# database setup
 
+# credentials
 Username: test
 Password: asdasd
 
@@ -23,4 +14,4 @@ Password: asdasd
 https://1dv610-assignment-2-mt222wz.000webhostapp.com/
 
 # second application
-My application is a message wall, where you can create, read, update and delete (CRUD) a post.
+My application is a social program where you can update your daily status, for example what you have done during the day or if you have felt good etc. the application is a CRD (Create, Read, Delete). you can update status, read your own and others status, and delete your own status. 
