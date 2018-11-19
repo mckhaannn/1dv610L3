@@ -58,9 +58,6 @@ class RegisterView {
       if(!$this->userCredentials->checkValidPasswordLength()) {
         $messages .= \view\Messages::PASSWORD_TO_SHORT_MESSAGE . \view\Messages::BREAK_ROW;
       }
-      if(!$this->userCredentials->doesUsernameExist()) {
-        $messages .= \view\Messages::USERNAME_EXISTS . \view\Messages::BREAK_ROW;
-      }
     } else {
        $messages = \view\Messages::EMPTY_STRING;
       }
