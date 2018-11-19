@@ -5,6 +5,7 @@ Interface repository for 1DV608 assignment 2 and 4
 How to create the needed tables.
 
 # database setup
+[link to setup](https://github.com/mckhaannn/1dv610L3/wiki/database-setup)
 
 # credentials
 Username: test
